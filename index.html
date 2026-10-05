@@ -20,16 +20,6 @@
     main { max-width: 640px; }
     h1 { font-size: 3.5rem; letter-spacing: 0.02em; margin-bottom: 1rem; }
     p { font-size: 1.25rem; line-height: 1.6; opacity: 0.9; margin-bottom: 2.5rem; }
-    .soon {
-      display: inline-block;
-      padding: 0.75rem 2rem;
-      border: 2px solid #fff;
-      border-radius: 999px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-    }
 
     /* Profile summary on the main page */
     .profile {
@@ -150,6 +140,120 @@
       cursor: pointer;
     }
     .primary:hover { background: #256a42; }
+    .secondary {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.7rem;
+      font: inherit;
+      color: #1e3a5f;
+      background: none;
+      border: 1.5px solid #c5d0db;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Main-page button that opens the workout form */
+    .big-btn {
+      padding: 0.9rem 2.25rem;
+      font: inherit;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e3a5f;
+      background: #fff;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    .big-btn:hover { background: #e8f3ec; }
+
+    /* Workout form extras */
+    textarea, input[type="time"] {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      font: inherit;
+      border: 1.5px solid #c5d0db;
+      border-radius: 8px;
+      color: #1e3a5f;
+      background: #fff;
+    }
+    textarea { resize: vertical; min-height: 4.5rem; }
+    textarea:focus { outline: 2px solid #2e7d4f; border-color: #2e7d4f; }
+    .workout-types { flex-wrap: wrap; }
+    .workout-types label { flex: 0 0 auto; }
+    .workout-types span { padding: 0.4rem 0.75rem; font-size: 0.9rem; border-radius: 999px; }
+    .two-col { display: flex; gap: 0.75rem; }
+    .two-col > .field { flex: 1; }
+    .check { display: flex; gap: 0.5rem; align-items: center; font-weight: 500; cursor: pointer; }
+    .check input { width: 1.1rem; height: 1.1rem; accent-color: #2e7d4f; }
+    .hidden { display: none !important; }
+
+    /* Today's fueling plan */
+    .plan {
+      margin-top: 2rem;
+      background: #fff;
+      color: #1e3a5f;
+      border-radius: 16px;
+      padding: 1.75rem;
+      text-align: left;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+    .plan h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .plan .workout-summary { color: #4a5a6a; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .plan .workout-notes { color: #4a5a6a; font-size: 0.9rem; font-style: italic; margin-bottom: 0.25rem; }
+    .approach {
+      margin: 1rem 0;
+      padding: 0.9rem 1rem;
+      background: #e8f3ec;
+      border-left: 4px solid #2e7d4f;
+      border-radius: 8px;
+    }
+    .approach strong { display: block; font-size: 1.15rem; margin-bottom: 0.2rem; }
+    .approach span { font-size: 0.95rem; }
+    .targets { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .target {
+      flex: 1;
+      padding: 0.6rem;
+      text-align: center;
+      border: 1.5px solid #e1e7ed;
+      border-radius: 10px;
+    }
+    .target b { display: block; font-size: 1.2rem; }
+    .target small { color: #4a5a6a; font-size: 0.8rem; }
+    .timeline { list-style: none; border-left: 2px solid #c5d0db; margin-left: 0.4rem; }
+    .timeline > li { position: relative; padding: 0 0 1.25rem 1.25rem; }
+    .timeline > li::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 0.3rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #2e7d4f;
+    }
+    .timeline > li.workout::before { background: #1e3a5f; }
+    .timeline .time { font-size: 0.85rem; font-weight: 600; color: #2e7d4f; }
+    .timeline > li.workout .time { color: #1e3a5f; }
+    .timeline .title { font-weight: 600; font-size: 1.05rem; }
+    .size {
+      display: inline-block;
+      margin-left: 0.4rem;
+      padding: 0.05rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 999px;
+      background: #eef1f4;
+      vertical-align: middle;
+    }
+    .size.big { background: #2e7d4f; color: #fff; }
+    .size.medium { background: #b9dcc6; color: #1e3a5f; }
+    .timeline .grams { font-size: 0.85rem; color: #4a5a6a; margin: 0.15rem 0; }
+    .timeline ul { margin: 0.25rem 0 0.25rem 1.1rem; font-size: 0.95rem; }
+    .timeline .why { font-size: 0.85rem; color: #4a5a6a; }
+    .tips h3 { font-size: 1.05rem; margin: 0.5rem 0 0.4rem; }
+    .tips ul { margin-left: 1.1rem; font-size: 0.95rem; line-height: 1.5; }
+    .disclaimer { margin-top: 1rem; font-size: 0.8rem; color: #6b7a89; }
   </style>
 </head>
 <body>
@@ -160,8 +264,54 @@
       <div id="profile-text"></div>
       <button type="button" class="link-btn" id="edit-profile">Edit my info</button>
     </div>
-    <div class="soon">Coming Soon</div>
+    <button type="button" class="big-btn" id="open-workout">Plan Today's Fuel</button>
+    <section class="plan hidden" id="plan" aria-live="polite"></section>
   </main>
+
+  <div class="overlay" id="workout" role="dialog" aria-modal="true" aria-labelledby="workout-title">
+    <form class="card" id="workout-form" novalidate>
+      <h2 id="workout-title">Today's workout</h2>
+      <div class="sub">Tell us what you're doing today and we'll plan what and when to eat.</div>
+
+      <fieldset class="field">
+        <legend>Type of workout</legend>
+        <div class="choices workout-types" id="workout-types"></div>
+      </fieldset>
+
+      <div class="field">
+        <label for="workout-notes">Describe your workout <span class="hint">(optional)</span></label>
+        <textarea id="workout-notes" placeholder="e.g. 6 x 200m at race pace, 2 min rest, then core"></textarea>
+      </div>
+
+      <div class="two-col">
+        <div class="field" id="time-field">
+          <label for="workout-time">Start time</label>
+          <input type="time" id="workout-time" value="15:30">
+        </div>
+        <div class="field" id="duration-field">
+          <label for="workout-duration">Length (minutes)</label>
+          <input type="number" id="workout-duration" min="10" max="300" step="5" value="60">
+        </div>
+      </div>
+
+      <fieldset class="field" id="intensity-field">
+        <legend>How hard?</legend>
+        <div class="choices">
+          <label><input type="radio" name="intensity" value="easy"><span>Easy</span></label>
+          <label><input type="radio" name="intensity" value="moderate" checked><span>Moderate</span></label>
+          <label><input type="radio" name="intensity" value="hard"><span>Hard</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label class="check"><input type="checkbox" id="race-tomorrow"> I have a race or meet tomorrow</label>
+      </div>
+
+      <div class="error" id="workout-error" role="alert"></div>
+      <button type="submit" class="primary">Get My Food Plan</button>
+      <button type="button" class="secondary" id="cancel-workout">Cancel</button>
+    </form>
+  </div>
 
   <div class="overlay" id="setup" role="dialog" aria-modal="true" aria-labelledby="setup-title">
     <form class="card" id="setup-form" novalidate>
@@ -313,13 +463,538 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
       overlay.classList.remove("show");
       showProfile();
+      renderSavedPlan();
     });
 
     document.getElementById("edit-profile").addEventListener("click", openSetup);
 
+    // ---------------------------------------------------------------
+    // Today's workout and fueling plan
+    // ---------------------------------------------------------------
+    const WORKOUT_KEY = "onTrackTodayWorkout";
+
+    const WORKOUT_TYPES = {
+      easy: "Easy / recovery run",
+      tempo: "Tempo / threshold",
+      intervals: "Intervals / track workout",
+      long: "Long run",
+      speed: "Sprints / speed work",
+      lift: "Weight lifting",
+      technical: "Jumps / throws practice",
+      race: "Race / meet",
+      rest: "Rest day",
+    };
+    // Short, explosive sessions where feeling light matters more than big fuel.
+    const POWER_TYPES = ["speed", "lift", "technical"];
+
+    const workoutOverlay = document.getElementById("workout");
+    const workoutForm = document.getElementById("workout-form");
+    const typeList = document.getElementById("workout-types");
+    const notesInput = document.getElementById("workout-notes");
+    const timeInput = document.getElementById("workout-time");
+    const durationInput = document.getElementById("workout-duration");
+    const raceTomorrowBox = document.getElementById("race-tomorrow");
+    const workoutError = document.getElementById("workout-error");
+    const planBox = document.getElementById("plan");
+
+    for (const [value, text] of Object.entries(WORKOUT_TYPES)) {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "workoutType";
+      input.value = value;
+      const span = document.createElement("span");
+      span.textContent = text;
+      label.append(input, span);
+      typeList.append(label);
+    }
+
+    function updateWorkoutFields() {
+      const type = workoutForm.elements.workoutType.value;
+      document.getElementById("time-field").classList.toggle("hidden", type === "rest");
+      document.getElementById("duration-field").classList.toggle("hidden", type === "rest");
+      document.getElementById("intensity-field").classList.toggle("hidden", type === "rest" || type === "race");
+    }
+    typeList.addEventListener("change", updateWorkoutFields);
+
+    function todayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+    }
+
+    function getTodayWorkout() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(WORKOUT_KEY));
+        return saved && saved.date === todayKey() ? saved.workout : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function openWorkout() {
+      const w = getTodayWorkout();
+      if (w) {
+        workoutForm.elements.workoutType.value = w.type;
+        notesInput.value = w.notes;
+        timeInput.value = w.startText;
+        durationInput.value = w.duration;
+        workoutForm.elements.intensity.value = w.intensity;
+        raceTomorrowBox.checked = w.raceTomorrow;
+      }
+      workoutError.textContent = "";
+      updateWorkoutFields();
+      workoutOverlay.classList.add("show");
+      typeList.querySelector("input").focus();
+    }
+
+    workoutForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const type = workoutForm.elements.workoutType.value;
+      const duration = parseInt(durationInput.value, 10);
+      if (!type) return (workoutError.textContent = "Please choose the type of workout.");
+      if (type !== "rest") {
+        if (!timeInput.value) return (workoutError.textContent = "Please enter what time your workout starts.");
+        if (!(duration >= 10 && duration <= 300)) {
+          return (workoutError.textContent = "Please enter a length between 10 and 300 minutes.");
+        }
+      }
+      const [h, m] = (timeInput.value || "00:00").split(":").map(Number);
+      const workout = {
+        type,
+        notes: notesInput.value.trim(),
+        startText: timeInput.value,
+        start: h * 60 + m,
+        duration: type === "rest" ? 0 : duration,
+        intensity: type === "race" ? "hard" : workoutForm.elements.intensity.value,
+        raceTomorrow: raceTomorrowBox.checked,
+      };
+      localStorage.setItem(WORKOUT_KEY, JSON.stringify({ date: todayKey(), workout }));
+      workoutOverlay.classList.remove("show");
+      renderSavedPlan();
+      planBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("open-workout").addEventListener("click", openWorkout);
+    document.getElementById("cancel-workout").addEventListener("click", () => {
+      workoutOverlay.classList.remove("show");
+    });
+
+    // ---- Recommendation engine ----
+    // Based on general sports-nutrition guidelines (ACSM / IOC): daily carbs
+    // scale with training load, ~0.3-0.4 g/kg protein per meal, bigger meals
+    // 3-4 h before hard sessions, easy carbs 30-60 min before, and carbs +
+    // protein within an hour after.
+
+    const FOODS = {
+      preSnack: ["Banana", "Applesauce pouch", "Toast or a rice cake with honey", "Handful of pretzels"],
+      raceSnack: ["Half a banana", "Sports drink", "A few energy chews"],
+      preBreakfastBig: ["Oatmeal with banana and honey + a glass of milk", "Bagel with peanut butter and a banana", "Pancakes or waffles with syrup and fruit"],
+      preBreakfastMedium: ["Toast with jam and a yogurt", "Cereal with milk and berries", "Half a bagel with peanut butter"],
+      preMealBig: ["Rice bowl with grilled chicken and veggies", "Pasta with marinara and lean meat", "Turkey sandwich on a roll + pretzels + fruit"],
+      preMealMedium: ["Turkey or chicken wrap + fruit", "Smaller chicken and rice bowl", "Peanut butter & honey sandwich + yogurt"],
+      during: ["Sports drink", "Energy gel or chews", "Water every 15-20 minutes"],
+      recoverySmall: ["Chocolate milk", "Greek yogurt with fruit", "Banana + string cheese"],
+      recoverySnack: ["Chocolate milk", "Smoothie with Greek yogurt, fruit and oats", "Turkey sandwich"],
+      recoveryBreakfast: ["Eggs, toast and fruit + chocolate milk", "Greek yogurt parfait with granola and berries + a bagel", "Breakfast burrito with eggs, potatoes and cheese"],
+      recoveryMeal: ["Grilled chicken, rice and roasted veggies", "Salmon, sweet potato and green beans", "Pasta with meat sauce and a side salad"],
+      recoveryLate: ["Greek yogurt with granola and fruit", "Eggs and toast", "Small chicken and rice bowl"],
+      Breakfast: ["Eggs, whole-grain toast and fruit", "Oatmeal with nuts and berries", "Yogurt parfait with granola"],
+      Lunch: ["Chicken or turkey wrap with veggies + fruit", "Grain bowl with rice, beans and veggies", "Sandwich, side salad and fruit"],
+      Snack: ["Apple with peanut butter", "Trail mix", "Hummus with crackers and veggies", "Cheese and crackers"],
+      Dinner: ["Chicken, brown rice and veggies", "Fish tacos with beans", "Stir-fry with tofu or beef and rice"],
+      raceEveDinner: ["Pasta with marinara and grilled chicken", "Rice with chicken and cooked carrots", "Baked potato with lean protein"],
+    };
+    const IRON_RICH_DINNER = "Lean beef or bean chili with rice (iron-rich)";
+
+    const REGULAR_MEALS = [
+      { time: 450, name: "Breakfast", why: "A balanced start: carbs, protein and fruit." },
+      { time: 750, name: "Lunch", why: "Keep carbs and protein coming to fuel the rest of your day." },
+      { time: 930, name: "Snack", why: "Keeps your energy steady between meals." },
+      { time: 1110, name: "Dinner", why: "Carbs, protein and veggies to recover and prepare for tomorrow." },
+    ];
+
+    const roundTime = (m) => Math.round(m / 15) * 15;
+    const round5 = (g) => Math.max(5, Math.round(g / 5) * 5);
+
+    function fmtTime(m) {
+      m = ((m % 1440) + 1440) % 1440;
+      const h = Math.floor(m / 60);
+      return `${h % 12 || 12}:${String(m % 60).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+    }
+
+    // Which meal a time of day falls in, or null if it's between meals.
+    function mealWindow(m) {
+      if (m >= 390 && m <= 600) return "Breakfast";
+      if (m >= 660 && m <= 870) return "Lunch";
+      if (m >= 1020 && m <= 1260) return "Dinner";
+      return null;
+    }
+
+    function trainingLoad(w) {
+      if (w.type === "rest") return "rest";
+      if (w.type === "race") return w.duration >= 90 ? "veryHigh" : "high";
+      const d = w.duration;
+      if (d >= 150 || (w.intensity === "hard" && d >= 120)) return "veryHigh";
+      if (d >= 90 || (w.intensity === "hard" && d >= 60)) return "high";
+      if (d <= 30 || (d <= 60 && (w.intensity === "easy" || w.type === "easy"))) return "light";
+      return "moderate";
+    }
+
+    function buildPlan(profile, w) {
+      const kg = profile.weightKg;
+      const groups = profile.eventGroups;
+      const endurance = groups.some((g) => ["Middle Distance", "Long Distance", "Race Walk"].includes(g));
+      const power = groups.some((g) => ["Sprints", "Hurdles", "Jumps", "Throws", "Multi-Events"].includes(g));
+      const female = profile.gender === "Female";
+      const load = trainingLoad(w);
+      const isRace = w.type === "race";
+      const powerSession = POWER_TYPES.includes(w.type);
+      const early = load !== "rest" && w.start < 540;
+      const T = w.start;
+      const E = T + w.duration;
+
+      // Daily targets (g per kg of body weight)
+      let carbKg = { rest: 3, light: 4, moderate: 5.5, high: 7, veryHigh: 9 }[load];
+      if (load !== "rest" && (endurance || ["long", "tempo"].includes(w.type))) carbKg += 0.5;
+      if (power && !endurance) carbKg -= 0.5;
+      if (isRace) carbKg = Math.max(carbKg, 7);
+      if (w.raceTomorrow) carbKg = Math.max(carbKg, endurance ? 8 : 6);
+      carbKg = Math.max(3, carbKg);
+      let proteinKg = power && !endurance ? 1.8 : endurance && !power ? 1.5 : 1.6;
+      if (w.type === "lift") proteinKg += 0.2;
+      proteinKg = Math.min(2, proteinKg);
+
+      const pickFoods = (key) => {
+        const list = [...FOODS[key]];
+        if (female && (key === "Dinner" || key === "recoveryMeal")) list[2] = IRON_RICH_DINNER;
+        return list;
+      };
+
+      // Overall approach for the day
+      let approach;
+      if (load === "rest") {
+        approach = ["Balanced day of eating", "No workout today, so spread your food evenly over 3 meals and a snack, with protein at each one to help your muscles recover from recent training."];
+      } else if (early) {
+        approach = ["Small before, big after", "Your workout is early, so there isn't time to digest a full meal. Have a small, easy snack before and make breakfast your big recovery meal."];
+      } else if (load === "light") {
+        approach = ["Normal meal before, light snack after", "This is an easy session, so a regular meal a few hours before is enough fuel. You don't need a big recovery meal - just a light snack, then eat normally."];
+      } else if (powerSession && load === "moderate") {
+        approach = ["Lighter before, big meal after", "Speed, lifting and technique work go best when you feel light and quick. Eat a moderate meal before, then a big protein-rich meal after to rebuild muscle."];
+      } else if (isRace) {
+        approach = ["Fuel up before, big recovery after", "Race day: eat a familiar, carb-rich meal 3-4 hours before, top up shortly before you compete, then refuel with carbs and protein afterwards."];
+      } else {
+        approach = ["Fuel up before, big recovery after", "This is a demanding session. Eat a carb-focused meal 3-4 hours before, top up with a snack, then refuel with carbs and protein soon after you finish."];
+      }
+
+      // Workout-specific entries (grams are per kg)
+      const fixed = [];
+      if (load !== "rest") {
+        const bigEffort = load === "veryHigh" || isRace;
+        // Before
+        if (early) {
+          fixed.push({
+            time: roundTime(T - (bigEffort ? 60 : 45)),
+            title: isRace ? "Pre-race snack" : "Pre-workout snack",
+            size: bigEffort ? "medium" : "small",
+            carbs: bigEffort ? 0.75 : 0.4,
+            protein: 0,
+            foods: pickFoods(isRace ? "raceSnack" : "preSnack"),
+            why: "You've been fasting overnight. Quick, easy-to-digest carbs top up your energy without upsetting your stomach." +
+              (load === "light" ? " For an easy session this is optional - at least drink some water." : ""),
+          });
+        } else {
+          const plannedSize = load === "light" || (load === "moderate" && powerSession) ? "medium" : "big";
+          let preTime = Math.max(420, roundTime(T - (plannedSize === "big" ? 210 : 180)));
+          const shortGap = T - preTime < 150;
+          const size = shortGap ? "medium" : plannedSize;
+          const name = mealWindow(preTime);
+          const breakfastTime = preTime < 630;
+          fixed.push({
+            time: preTime,
+            title: name ? `Pre-workout ${name.toLowerCase()}` : "Pre-workout meal",
+            meal: name,
+            size,
+            carbs: size === "big" ? (bigEffort ? 2 : 1.5) : 1,
+            protein: 0.3,
+            foods: pickFoods(breakfastTime ? (size === "big" ? "preBreakfastBig" : "preBreakfastMedium") : (size === "big" ? "preMealBig" : "preMealMedium")),
+            why: shortGap
+              ? "There's less time to digest before your workout, so keep this meal moderate and go easy on fat and fiber."
+              : size === "big"
+                ? "Eating 3-4 hours before gives your body time to digest and store the carbs as energy for your workout."
+                : load === "light"
+                  ? "A normal meal a few hours before is plenty of fuel for this session."
+                  : "Enough fuel to perform without feeling heavy during speed and explosive work.",
+          });
+          if (T - preTime >= (load === "light" ? 240 : 180)) {
+            fixed.push({
+              time: roundTime(T - (isRace ? 45 : 60)),
+              title: isRace ? "Pre-race top-up" : "Pre-workout snack",
+              size: "small",
+              carbs: bigEffort ? 0.75 : load === "light" ? 0.4 : 0.5,
+              protein: 0,
+              foods: pickFoods(isRace ? "raceSnack" : "preSnack"),
+              why: isRace
+                ? "A small top-up keeps your energy high without upsetting your stomach before you compete."
+                : "Quick, easy-to-digest carbs top off your energy without sitting heavy in your stomach.",
+            });
+          }
+        }
+
+        // During
+        fixed.push({
+          time: T,
+          workout: true,
+          title: `${WORKOUT_TYPES[w.type]} · ${w.duration} min`,
+          during: w.duration >= 75 && !POWER_TYPES.includes(w.type),
+        });
+
+        // After
+        const rt = roundTime(E + 30);
+        if (load === "light" && !early) {
+          fixed.push({
+            time: rt,
+            title: "Light snack after",
+            size: "small",
+            carbs: 0.3,
+            protein: 0.25,
+            foods: pickFoods("recoverySmall"),
+            why: "An easy session doesn't drain much energy - a light snack is enough until your next meal.",
+          });
+        } else if (rt > 1260) {
+          fixed.push({
+            time: rt,
+            title: "Recovery snack before bed",
+            recovery: true,
+            size: "medium",
+            carbs: 0.8,
+            protein: 0.4,
+            foods: pickFoods("recoveryLate"),
+            why: "It's late, so keep it easy to digest - but you still need carbs and protein to recover overnight.",
+          });
+        } else {
+          const win = mealWindow(rt) || (early ? "Breakfast" : null);
+          const protein = powerSession ? 0.45 : 0.4;
+          const carbs = load === "moderate" ? 1 : 1.2;
+          const muscleNote = powerSession || (power && !endurance)
+            ? " Protein is especially important after speed and strength work to rebuild muscle."
+            : "";
+          fixed.push(win
+            ? {
+              time: rt,
+              title: `Recovery ${win.toLowerCase()}`,
+              recovery: true,
+              meal: win,
+              size: load === "light" ? "medium" : "big",
+              carbs: load === "light" ? 0.8 : carbs,
+              protein: load === "light" ? 0.3 : protein,
+              foods: pickFoods(win === "Breakfast" ? "recoveryBreakfast" : "recoveryMeal"),
+              why: (load === "light"
+                ? "A normal breakfast after an easy session is all the recovery you need."
+                : "Your big meal after training: carbs refill your energy stores and protein repairs your muscles.") + muscleNote,
+            }
+            : {
+              time: rt,
+              title: "Recovery snack",
+              recovery: true,
+              size: "medium",
+              carbs: load === "moderate" ? 0.8 : 1,
+              protein: 0.3,
+              foods: pickFoods("recoverySnack"),
+              why: "Get carbs and protein in within 30-60 minutes of finishing, then have a full meal later." + muscleNote,
+            });
+        }
+      }
+
+      // Fill in normal meals that don't clash with the workout or other meals
+      const entries = [...fixed];
+      const addMeals = (list) => {
+        for (const meal of list) {
+          const snack = meal.name.includes("Snack") || meal.name.includes("snack");
+          if (fixed.some((f) => f.meal === meal.name)) continue;
+          if (load !== "rest" && meal.time > T - 90 && meal.time < E + 30) continue;
+          // Full meals only need space from other meals; snacks need space from everything.
+          const clash = entries.some((x) => !x.workout && (snack || x.size !== "small") &&
+            Math.abs(x.time - meal.time) < (snack ? 120 : 150));
+          if (clash) continue;
+          entries.push({
+            time: meal.time,
+            title: meal.name,
+            meal: meal.name,
+            regular: true,
+            size: snack ? "small" : "medium",
+            share: snack ? 1 : 2,
+            foods: pickFoods(snack ? "Snack" : meal.name),
+            why: meal.why,
+          });
+        }
+      };
+      addMeals(REGULAR_MEALS);
+
+      // Pre-workout food is capped by what you can digest; everything else
+      // shares the rest of the daily target (recovery meals get a bigger share).
+      const meals = () => entries.filter((x) => !x.workout);
+      const flexShare = (x) => (x.regular ? x.share : x.recovery ? (x.size === "big" ? 2.5 : 1.5) : 0);
+      const carbsPerShare = () => {
+        const capped = meals().filter((x) => !flexShare(x)).reduce((s, x) => s + x.carbs, 0);
+        const shares = meals().reduce((s, x) => s + flexShare(x), 0);
+        return shares ? (carbKg - capped) / shares : 0;
+      };
+      // Big-carb days: add extra snacks rather than making meals huge.
+      if (carbsPerShare() > 0.7) {
+        addMeals([
+          { time: 600, name: "Morning snack", why: "Extra fuel - you need a lot of carbs today, so spread them out." },
+          { time: 1230, name: "Evening snack", why: "Extra fuel to finish refilling your energy stores before bed." },
+        ]);
+      }
+      entries.sort((a, b) => a.time - b.time);
+
+      const perShare = carbsPerShare();
+      const cappedProtein = meals().filter((x) => !flexShare(x)).reduce((s, x) => s + x.protein, 0);
+      const proteinShares = meals().reduce((s, x) => s + flexShare(x), 0);
+      for (const x of meals()) {
+        const share = flexShare(x);
+        if (!share) continue;
+        x.carbs = Math.max(x.carbs || 0.25 * share, perShare * share);
+        x.protein = Math.max(x.protein || 0.15 * share, ((proteinKg - cappedProtein) / proteinShares) * share);
+      }
+      for (const x of meals()) {
+        x.carbsG = round5(x.carbs * kg);
+        x.proteinG = x.protein ? round5(x.protein * kg) : 0;
+      }
+
+      // Race tomorrow: make the last dinner a carb-focused, familiar meal
+      if (w.raceTomorrow) {
+        const dinner = meals().reverse().find((x) => x.meal === "Dinner");
+        if (dinner) {
+          dinner.foods = FOODS.raceEveDinner;
+          dinner.why += " With a race tomorrow, make this carb-focused and stick to familiar foods - go easy on fiber, fat and spice.";
+        }
+      }
+
+      // Tips
+      const metric = profile.weightUnit === "kg";
+      const preMl = Math.round((kg * 6) / 50) * 50;
+      const tips = [];
+      if (load !== "rest") {
+        tips.push(`Drink about ${metric ? `${preMl} mL` : `${Math.round(preMl / 29.57)} oz`} of water 2-4 hours before your workout, and sip during it.`);
+        tips.push(`After training, drink ${metric ? "500-700 mL" : "16-24 oz"} of fluid for every ${metric ? "0.5 kg" : "pound"} of sweat you lose.`);
+      } else {
+        tips.push("Even on rest days, keep a water bottle with you and drink until your urine is pale yellow.");
+      }
+      if (fixed.some((x) => x.during)) {
+        tips.push("Your session is over 75 minutes, so take in 30-60 g of carbs per hour during it (sports drink, gels or chews).");
+      }
+      if (early && (load === "high" || load === "veryHigh")) {
+        tips.push("Since you train early, eat a carb-rich dinner the night before - that's where much of your fuel comes from.");
+      }
+      if (endurance && load !== "rest") {
+        tips.push("As a distance athlete, carbs are your main fuel - don't cut them on training days.");
+      }
+      if (power) {
+        tips.push(`Spread your protein through the day - about ${round5(0.35 * kg)} g per meal helps build power and repair muscle.`);
+      }
+      if (isRace) tips.push("Nothing new on race day - stick with foods you've practiced eating before workouts.");
+      if (w.raceTomorrow) tips.push("Race tomorrow: keep sipping water, have your carb-focused dinner, and get to bed early.");
+      if (female) {
+        tips.push("Include iron-rich foods (lean red meat, beans, spinach, fortified cereal) with vitamin C like oranges or strawberries - female athletes, especially distance runners, are more likely to run low on iron.");
+        tips.push("Don't under-fuel: eating too little for your training can affect your energy, bones and menstrual cycle.");
+      }
+
+      return {
+        approach,
+        carbsG: round5(carbKg * kg),
+        proteinG: round5(proteinKg * kg),
+        waterText: metric ? `${(Math.round(kg * 0.035 * 10) / 10).toFixed(1)}+ L` : `${Math.round((kg * 35) / 29.57)}+ oz`,
+        entries,
+        tips,
+      };
+    }
+
+    // ---- Render ----
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function renderSavedPlan() {
+      const profile = getAthleteProfile();
+      const w = getTodayWorkout();
+      if (!profile || !w) {
+        planBox.classList.add("hidden");
+        document.getElementById("open-workout").textContent = "Plan Today's Fuel";
+        return;
+      }
+      document.getElementById("open-workout").textContent = "Change Today's Workout";
+      const plan = buildPlan(profile, w);
+      planBox.textContent = "";
+
+      planBox.append(el("h2", "", "Your food plan for today"));
+      const summary = w.type === "rest"
+        ? "Rest day"
+        : `${WORKOUT_TYPES[w.type]} · ${w.duration} min` +
+          (w.type === "race" ? "" : ` · ${w.intensity}`) +
+          ` · starts ${fmtTime(w.start)}`;
+      planBox.append(el("div", "workout-summary", summary + (w.raceTomorrow ? " · race tomorrow" : "")));
+      if (w.notes) planBox.append(el("div", "workout-notes", `"${w.notes}"`));
+
+      const approach = el("div", "approach");
+      approach.append(el("strong", "", plan.approach[0]), el("span", "", plan.approach[1]));
+      planBox.append(approach);
+
+      const targets = el("div", "targets");
+      for (const [value, label] of [[`${plan.carbsG} g`, "carbs today"], [`${plan.proteinG} g`, "protein today"], [plan.waterText, "water today"]]) {
+        const t = el("div", "target");
+        t.append(el("b", "", value), el("small", "", label));
+        targets.append(t);
+      }
+      planBox.append(targets);
+
+      const list = el("ol", "timeline");
+      for (const x of plan.entries) {
+        const li = el("li", x.workout ? "workout" : "");
+        li.append(el("div", "time", fmtTime(x.time)));
+        const title = el("div", "title", x.workout ? `Workout: ${x.title}` : x.title);
+        if (x.size) {
+          title.append(el("span", `size ${x.size}`, { small: "Small", medium: "Medium", big: "Big" }[x.size]));
+        }
+        li.append(title);
+        if (x.workout) {
+          if (x.during) {
+            li.append(el("div", "grams", "~30-60 g carbs per hour during"));
+            const ul = el("ul");
+            FOODS.during.forEach((f) => ul.append(el("li", "", f)));
+            li.append(ul);
+          } else {
+            li.append(el("div", "why", "Sip water during your session."));
+          }
+        } else {
+          li.append(el("div", "grams", `~${x.carbsG} g carbs` + (x.proteinG ? ` · ${x.proteinG} g protein` : "")));
+          const ul = el("ul");
+          x.foods.forEach((f) => ul.append(el("li", "", f)));
+          li.append(ul);
+          li.append(el("div", "why", x.why));
+        }
+        list.append(li);
+      }
+      planBox.append(list);
+
+      const tips = el("div", "tips");
+      tips.append(el("h3", "", "Tips for today"));
+      const ul = el("ul");
+      plan.tips.forEach((t) => ul.append(el("li", "", t)));
+      tips.append(ul);
+      planBox.append(tips);
+
+      planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick one per meal. Talk to a sports dietitian for a personal plan."));
+      planBox.classList.remove("hidden");
+    }
+
     // Ask on first open; afterwards show the saved info with an option to edit.
     if (getAthleteProfile()) {
       showProfile();
+      renderSavedPlan();
     } else {
       openSetup();
     }
