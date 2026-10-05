@@ -30,13 +30,284 @@
       text-transform: uppercase;
       letter-spacing: 0.15em;
     }
+
+    /* Profile summary on the main page */
+    .profile {
+      display: none;
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      font-size: 1.05rem;
+    }
+    .profile.show { display: block; }
+    .profile strong { font-weight: 600; }
+    .link-btn {
+      margin-top: 0.5rem;
+      background: none;
+      border: none;
+      color: #fff;
+      text-decoration: underline;
+      font: inherit;
+      font-size: 0.95rem;
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    /* Setup overlay shown when the app opens */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 20, 35, 0.75);
+      padding: 1.5rem;
+    }
+    .overlay.show { display: flex; }
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: #fff;
+      color: #1e3a5f;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: left;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+    .card h2 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+    .card .sub { font-size: 0.95rem; color: #4a5a6a; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1.25rem; border: none; }
+    .field label, .field legend {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      font: inherit;
+      border: 1.5px solid #c5d0db;
+      border-radius: 8px;
+      color: #1e3a5f;
+      background: #fff;
+    }
+    select:focus, input:focus { outline: 2px solid #2e7d4f; border-color: #2e7d4f; }
+    .choices { display: flex; gap: 0.5rem; }
+    .choices label {
+      flex: 1;
+      margin: 0;
+      font-weight: 500;
+    }
+    .choices input { position: absolute; opacity: 0; pointer-events: none; }
+    .choices span {
+      display: block;
+      padding: 0.6rem;
+      text-align: center;
+      border: 1.5px solid #c5d0db;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .choices input:checked + span {
+      background: #2e7d4f;
+      border-color: #2e7d4f;
+      color: #fff;
+    }
+    .choices input:focus-visible + span { outline: 2px solid #1e3a5f; }
+    .weight-row { display: flex; gap: 0.5rem; }
+    .weight-row input { flex: 1; }
+    .weight-row .choices { flex: 0 0 120px; }
+    .error {
+      min-height: 1.2em;
+      color: #b3261e;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    .primary {
+      width: 100%;
+      padding: 0.8rem;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      background: #2e7d4f;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .primary:hover { background: #256a42; }
   </style>
 </head>
 <body>
   <main>
     <h1>On-Track</h1>
     <p>AI that helps track and field athletes know exactly what to eat before and after training or racing, based on their event and workout.</p>
+    <div class="profile" id="profile">
+      <div id="profile-text"></div>
+      <button type="button" class="link-btn" id="edit-profile">Edit my info</button>
+    </div>
     <div class="soon">Coming Soon</div>
   </main>
+
+  <div class="overlay" id="setup" role="dialog" aria-modal="true" aria-labelledby="setup-title">
+    <form class="card" id="setup-form" novalidate>
+      <h2 id="setup-title">Tell us about you</h2>
+      <div class="sub">This helps On-Track tailor food advice to your event and body.</div>
+
+      <div class="field">
+        <label for="event">Your event</label>
+        <select id="event" required>
+          <option value="">Choose your event…</option>
+          <optgroup label="Sprints">
+            <option>60m</option>
+            <option>100m</option>
+            <option>200m</option>
+            <option>400m</option>
+          </optgroup>
+          <optgroup label="Hurdles">
+            <option>60m Hurdles</option>
+            <option>100m Hurdles</option>
+            <option>110m Hurdles</option>
+            <option>400m Hurdles</option>
+          </optgroup>
+          <optgroup label="Middle Distance">
+            <option>800m</option>
+            <option>1500m</option>
+            <option>Mile</option>
+          </optgroup>
+          <optgroup label="Long Distance">
+            <option>3000m</option>
+            <option>3000m Steeplechase</option>
+            <option>5000m</option>
+            <option>10,000m</option>
+            <option>Cross Country</option>
+          </optgroup>
+          <optgroup label="Jumps">
+            <option>High Jump</option>
+            <option>Long Jump</option>
+            <option>Triple Jump</option>
+            <option>Pole Vault</option>
+          </optgroup>
+          <optgroup label="Throws">
+            <option>Shot Put</option>
+            <option>Discus</option>
+            <option>Javelin</option>
+            <option>Hammer Throw</option>
+            <option>Weight Throw</option>
+          </optgroup>
+          <optgroup label="Multi-Events">
+            <option>Pentathlon</option>
+            <option>Heptathlon</option>
+            <option>Decathlon</option>
+          </optgroup>
+          <optgroup label="Race Walk">
+            <option>Race Walk</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <fieldset class="field">
+        <legend>Gender</legend>
+        <div class="choices">
+          <label><input type="radio" name="gender" value="Male"><span>Male</span></label>
+          <label><input type="radio" name="gender" value="Female"><span>Female</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="weight">Weight</label>
+        <div class="weight-row">
+          <input type="number" id="weight" min="1" step="0.1" inputmode="decimal" placeholder="e.g. 150">
+          <div class="choices" role="radiogroup" aria-label="Weight unit">
+            <label><input type="radio" name="unit" value="lb" checked><span>lb</span></label>
+            <label><input type="radio" name="unit" value="kg"><span>kg</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="error" id="setup-error" role="alert"></div>
+      <button type="submit" class="primary">Save &amp; Continue</button>
+    </form>
+  </div>
+
+  <script>
+    // Athlete background info, saved in the browser so other parts of the
+    // app can read it later via getAthleteProfile().
+    const STORAGE_KEY = "onTrackProfile";
+    const LB_PER_KG = 2.20462;
+
+    function getAthleteProfile() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
+      } catch {
+        return null;
+      }
+    }
+
+    const overlay = document.getElementById("setup");
+    const form = document.getElementById("setup-form");
+    const eventSelect = document.getElementById("event");
+    const weightInput = document.getElementById("weight");
+    const errorBox = document.getElementById("setup-error");
+
+    function openSetup() {
+      const profile = getAthleteProfile();
+      if (profile) {
+        eventSelect.value = profile.event;
+        form.elements.gender.value = profile.gender;
+        form.elements.unit.value = profile.weightUnit;
+        weightInput.value = profile.weight;
+      }
+      errorBox.textContent = "";
+      overlay.classList.add("show");
+      eventSelect.focus();
+    }
+
+    function showProfile() {
+      const profile = getAthleteProfile();
+      if (!profile) return;
+      document.getElementById("profile-text").innerHTML =
+        `<strong>${profile.event}</strong> (${profile.eventGroup}) · ${profile.gender} · ${profile.weight} ${profile.weightUnit}`;
+      document.getElementById("profile").classList.add("show");
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const event = eventSelect.value;
+      const gender = form.elements.gender.value;
+      const unit = form.elements.unit.value;
+      const weight = parseFloat(weightInput.value);
+      const weightKg = unit === "kg" ? weight : weight / LB_PER_KG;
+
+      if (!event) return (errorBox.textContent = "Please choose your event.");
+      if (!gender) return (errorBox.textContent = "Please choose Male or Female.");
+      if (!(weightKg >= 25 && weightKg <= 230)) {
+        return (errorBox.textContent = unit === "kg"
+          ? "Please enter a weight between 25 and 230 kg."
+          : "Please enter a weight between 55 and 500 lb.");
+      }
+
+      const profile = {
+        event,
+        eventGroup: eventSelect.selectedOptions[0].parentElement.label,
+        gender,
+        weight,
+        weightUnit: unit,
+        weightKg: Math.round(weightKg * 10) / 10,
+        updatedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      overlay.classList.remove("show");
+      showProfile();
+    });
+
+    document.getElementById("edit-profile").addEventListener("click", openSetup);
+
+    // Ask on first open; afterwards show the saved info with an option to edit.
+    if (getAthleteProfile()) {
+      showProfile();
+    } else {
+      openSetup();
+    }
+  </script>
 </body>
 </html>
