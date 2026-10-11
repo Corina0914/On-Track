@@ -254,6 +254,25 @@
     .tips h3 { font-size: 1.05rem; margin: 0.5rem 0 0.4rem; }
     .tips ul { margin-left: 1.1rem; font-size: 0.95rem; line-height: 1.5; }
     .disclaimer { margin-top: 1rem; font-size: 0.8rem; color: #6b7a89; }
+
+    /* Disclaimer: popup on first open, then fine print in the corner */
+    .disclaimer-text { font-size: 1rem; line-height: 1.6; color: #1e3a5f; margin-bottom: 1.5rem; }
+    .fine-print {
+      display: none;
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      max-width: 320px;
+      font-size: 0.7rem;
+      line-height: 1.4;
+      text-align: left;
+      opacity: 0.75;
+    }
+    .fine-print.show { display: block; }
+    @media (max-width: 600px) {
+      body { padding-bottom: 7rem; }
+      .fine-print { left: 1rem; max-width: none; }
+    }
   </style>
 </head>
 <body>
@@ -345,6 +364,16 @@
       <div class="error" id="setup-error" role="alert"></div>
       <button type="submit" class="primary">Save &amp; Continue</button>
     </form>
+  </div>
+
+  <div class="fine-print" id="fine-print"></div>
+
+  <div class="overlay" id="disclaimer" role="dialog" aria-modal="true" aria-labelledby="disclaimer-title">
+    <div class="card">
+      <h2 id="disclaimer-title">Before you start</h2>
+      <p class="disclaimer-text" id="disclaimer-text"></p>
+      <button type="button" class="primary" id="accept-disclaimer">I Understand</button>
+    </div>
   </div>
 
   <script>
@@ -990,6 +1019,30 @@
       planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick one per meal. Talk to a sports dietitian for a personal plan."));
       planBox.classList.remove("hidden");
     }
+
+    // ---------------------------------------------------------------
+    // Disclaimer: shown as a popup the first time, then kept as fine
+    // print in the corner.
+    // ---------------------------------------------------------------
+    const DISCLAIMER_KEY = "onTrackDisclaimerSeen";
+    const DISCLAIMER = "Disclaimer: This app provides general nutrition guidance for track athletes and is not a substitute for professional medical or nutritional advice. Individual needs vary, so consult a qualified healthcare professional or sports dietitian for personalized recommendations.";
+    const disclaimerBox = document.getElementById("disclaimer");
+    const finePrint = document.getElementById("fine-print");
+    document.getElementById("disclaimer-text").textContent = DISCLAIMER;
+    finePrint.textContent = DISCLAIMER;
+
+    if (localStorage.getItem(DISCLAIMER_KEY)) {
+      finePrint.classList.add("show");
+    } else {
+      disclaimerBox.classList.add("show");
+      document.getElementById("accept-disclaimer").focus();
+    }
+
+    document.getElementById("accept-disclaimer").addEventListener("click", () => {
+      localStorage.setItem(DISCLAIMER_KEY, "yes");
+      disclaimerBox.classList.remove("show");
+      finePrint.classList.add("show");
+    });
 
     // Ask on first open; afterwards show the saved info with an option to edit.
     if (getAthleteProfile()) {
