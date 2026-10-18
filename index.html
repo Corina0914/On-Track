@@ -168,7 +168,7 @@
     .big-btn:hover { background: #e8f3ec; }
 
     /* Workout form extras */
-    textarea, input[type="time"] {
+    textarea, input[type="time"], input[type="text"] {
       width: 100%;
       padding: 0.65rem 0.75rem;
       font: inherit;
@@ -178,7 +178,7 @@
       background: #fff;
     }
     textarea { resize: vertical; min-height: 4.5rem; }
-    textarea:focus { outline: 2px solid #2e7d4f; border-color: #2e7d4f; }
+    textarea:focus, input[type="text"]:focus { outline: 2px solid #2e7d4f; border-color: #2e7d4f; }
     .workout-types { flex-wrap: wrap; }
     .workout-types label { flex: 0 0 auto; }
     .workout-types span { padding: 0.4rem 0.75rem; font-size: 0.9rem; border-radius: 999px; }
@@ -255,6 +255,97 @@
     .tips ul { margin-left: 1.1rem; font-size: 0.95rem; line-height: 1.5; }
     .disclaimer { margin-top: 1rem; font-size: 0.8rem; color: #6b7a89; }
 
+    /* Tabs: Today / Food Log */
+    .tabs {
+      display: inline-flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      margin-bottom: 2rem;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+    }
+    .tab {
+      padding: 0.5rem 1.4rem;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      background: none;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .tab.active { background: #fff; color: #1e3a5f; }
+
+    /* "What did you eat?" picker under each meal */
+    .pick { border: none; margin: 0.5rem 0; }
+    .pick-label { font-size: 0.85rem; font-weight: 600; color: #4a5a6a; margin-bottom: 0.35rem; }
+    .pick-option {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      padding: 0.4rem 0.65rem;
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+      border: 1.5px solid #e1e7ed;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .pick-option input { margin-top: 0.2rem; accent-color: #2e7d4f; }
+    .pick-option:has(input:checked) { background: #e8f3ec; border-color: #2e7d4f; }
+    .pick .saved { min-height: 1.1em; font-size: 0.8rem; color: #2e7d4f; }
+
+    /* Food log calendar */
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .cal-head h2 { margin: 0; font-size: 1.35rem; }
+    .cal-nav {
+      width: 2.25rem;
+      height: 2.25rem;
+      font-size: 1.2rem;
+      color: #1e3a5f;
+      background: #fff;
+      border: 1.5px solid #c5d0db;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.3rem; }
+    .cal-weekday { font-size: 0.75rem; font-weight: 600; text-align: center; color: #4a5a6a; }
+    .cal-day {
+      position: relative;
+      aspect-ratio: 1;
+      font: inherit;
+      font-size: 0.95rem;
+      color: #1e3a5f;
+      background: #fff;
+      border: 1.5px solid #e1e7ed;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .cal-day.logged { background: #e8f3ec; border-color: #b9dcc6; }
+    .cal-day.logged::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0.3rem;
+      width: 6px;
+      height: 6px;
+      margin-left: -3px;
+      border-radius: 50%;
+      background: #2e7d4f;
+    }
+    .cal-day.today { font-weight: 700; border-color: #1e3a5f; }
+    .cal-day.selected { background: #2e7d4f; border-color: #2e7d4f; color: #fff; }
+    .cal-day.selected::after { background: #fff; }
+    .cal-count { margin-top: 0.75rem; font-size: 0.85rem; color: #4a5a6a; }
+    .day-detail { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #e1e7ed; }
+    .day-detail h3 { font-size: 1.15rem; margin-bottom: 0.2rem; }
+    .day-meals { list-style: none; margin-top: 0.75rem; }
+    .day-meals li { padding: 0.55rem 0; border-bottom: 1px solid #eef1f4; }
+    .day-meals li:last-child { border-bottom: none; }
+    .day-meals .time { font-size: 0.8rem; font-weight: 600; color: #2e7d4f; }
+    .day-meals .title { font-weight: 600; }
+    .day-meals .food { font-size: 0.95rem; }
+    .empty { margin-top: 0.5rem; font-size: 0.95rem; color: #4a5a6a; }
+
     /* Disclaimer: popup on first open, then fine print in the corner */
     .disclaimer-text { font-size: 1rem; line-height: 1.6; color: #1e3a5f; margin-bottom: 1.5rem; }
     .fine-print {
@@ -279,12 +370,19 @@
   <main>
     <h1>On-Track</h1>
     <p>AI that helps track and field athletes know exactly what to eat before and after training or racing, based on their event and workout.</p>
-    <div class="profile" id="profile">
-      <div id="profile-text"></div>
-      <button type="button" class="link-btn" id="edit-profile">Edit my info</button>
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab active" role="tab" id="tab-today" aria-selected="true" aria-controls="today-view">Today</button>
+      <button type="button" class="tab" role="tab" id="tab-log" aria-selected="false" aria-controls="log-view">Food Log</button>
     </div>
-    <button type="button" class="big-btn" id="open-workout">Plan Today's Fuel</button>
-    <section class="plan hidden" id="plan" aria-live="polite"></section>
+    <div id="today-view" role="tabpanel" aria-labelledby="tab-today">
+      <div class="profile" id="profile">
+        <div id="profile-text"></div>
+        <button type="button" class="link-btn" id="edit-profile">Edit my info</button>
+      </div>
+      <button type="button" class="big-btn" id="open-workout">Plan Today's Fuel</button>
+      <section class="plan hidden" id="plan" aria-live="polite"></section>
+    </div>
+    <section class="plan hidden" id="log-view" role="tabpanel" aria-labelledby="tab-log"></section>
   </main>
 
   <div class="overlay" id="workout" role="dialog" aria-modal="true" aria-labelledby="workout-title">
@@ -546,10 +644,10 @@
     }
     typeList.addEventListener("change", updateWorkoutFields);
 
-    function todayKey() {
-      const d = new Date();
+    function dayKey(d) {
       return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
     }
+    const todayKey = () => dayKey(new Date());
 
     function getTodayWorkout() {
       try {
@@ -947,6 +1045,103 @@
       return node;
     }
 
+    function workoutSummary(w) {
+      const summary = w.type === "rest"
+        ? "Rest day"
+        : `${WORKOUT_TYPES[w.type]} · ${w.duration} min` +
+          (w.type === "race" ? "" : ` · ${w.intensity}`) +
+          ` · starts ${fmtTime(w.start)}`;
+      return summary + (w.raceTomorrow ? " · race tomorrow" : "");
+    }
+
+    // ---- Food log: what the athlete actually ate, saved per day ----
+    // { "2026-10-17": { workout: "...", meals: { "Lunch": { time, food, other } } } }
+    const LOG_KEY = "onTrackFoodLog";
+    const OTHER = "__other";
+
+    function getFoodLog() {
+      try {
+        return JSON.parse(localStorage.getItem(LOG_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveFoodLog(log) {
+      localStorage.setItem(LOG_KEY, JSON.stringify(log));
+    }
+
+    function logMeal(x, food, other) {
+      const log = getFoodLog();
+      const day = log[todayKey()] || { meals: {} };
+      day.workout = workoutSummary(getTodayWorkout());
+      day.meals[x.title] = { time: x.time, food, other };
+      log[todayKey()] = day;
+      saveFoodLog(log);
+    }
+
+    // Meals change when the workout does, so drop choices for meals that
+    // are no longer in today's plan.
+    function syncTodayLog(plan, w) {
+      const log = getFoodLog();
+      const day = log[todayKey()];
+      if (!day) return;
+      const kept = {};
+      for (const x of plan.entries) {
+        if (!x.workout && day.meals[x.title]) kept[x.title] = { ...day.meals[x.title], time: x.time };
+      }
+      if (Object.keys(kept).length) {
+        log[todayKey()] = { workout: workoutSummary(w), meals: kept };
+      } else {
+        delete log[todayKey()];
+      }
+      saveFoodLog(log);
+    }
+
+    // Radio list of the suggested foods plus "Other" with a text box.
+    function mealPicker(x, i, saved) {
+      const box = el("fieldset", "pick");
+      box.append(el("legend", "pick-label", "What did you eat?"));
+      const name = `meal-${i}`;
+      const savedOther = saved && (saved.other || !x.foods.includes(saved.food));
+      const option = (value, text) => {
+        const label = el("label", "pick-option");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = name;
+        input.value = value;
+        input.checked = !!saved && (value === OTHER ? savedOther : !savedOther && saved.food === value);
+        label.append(input, el("span", "", text));
+        box.append(label);
+      };
+      x.foods.forEach((f) => option(f, f));
+      option(OTHER, "Other");
+
+      const otherInput = document.createElement("input");
+      otherInput.type = "text";
+      otherInput.placeholder = "Type what you ate";
+      otherInput.setAttribute("aria-label", `What you ate for ${x.title}`);
+      otherInput.value = savedOther ? saved.food : "";
+      otherInput.classList.toggle("hidden", !savedOther);
+      const status = el("div", "saved", saved ? "Saved to your food log" : "");
+      box.append(otherInput, status);
+
+      const record = () => {
+        const choice = box.querySelector("input[type=radio]:checked");
+        if (!choice) return;
+        const other = choice.value === OTHER;
+        otherInput.classList.toggle("hidden", !other);
+        logMeal(x, other ? otherInput.value.trim() : choice.value, other);
+        status.textContent = "Saved to your food log";
+      };
+      box.addEventListener("change", (e) => {
+        record();
+        if (e.target.value === OTHER) otherInput.focus();
+      });
+      otherInput.addEventListener("input", record);
+      return box;
+    }
+
     function renderSavedPlan() {
       const profile = getAthleteProfile();
       const w = getTodayWorkout();
@@ -957,15 +1152,12 @@
       }
       document.getElementById("open-workout").textContent = "Change Today's Workout";
       const plan = buildPlan(profile, w);
+      syncTodayLog(plan, w);
+      const todayLog = getFoodLog()[todayKey()];
       planBox.textContent = "";
 
       planBox.append(el("h2", "", "Your food plan for today"));
-      const summary = w.type === "rest"
-        ? "Rest day"
-        : `${WORKOUT_TYPES[w.type]} · ${w.duration} min` +
-          (w.type === "race" ? "" : ` · ${w.intensity}`) +
-          ` · starts ${fmtTime(w.start)}`;
-      planBox.append(el("div", "workout-summary", summary + (w.raceTomorrow ? " · race tomorrow" : "")));
+      planBox.append(el("div", "workout-summary", workoutSummary(w)));
       if (w.notes) planBox.append(el("div", "workout-notes", `"${w.notes}"`));
 
       const approach = el("div", "approach");
@@ -981,7 +1173,7 @@
       planBox.append(targets);
 
       const list = el("ol", "timeline");
-      for (const x of plan.entries) {
+      for (const [i, x] of plan.entries.entries()) {
         const li = el("li", x.workout ? "workout" : "");
         li.append(el("div", "time", fmtTime(x.time)));
         const title = el("div", "title", x.workout ? `Workout: ${x.title}` : x.title);
@@ -1000,9 +1192,7 @@
           }
         } else {
           li.append(el("div", "grams", `~${x.carbsG} g carbs` + (x.proteinG ? ` · ${x.proteinG} g protein` : "")));
-          const ul = el("ul");
-          x.foods.forEach((f) => ul.append(el("li", "", f)));
-          li.append(ul);
+          li.append(mealPicker(x, i, todayLog && todayLog.meals[x.title]));
           li.append(el("div", "why", x.why));
         }
         list.append(li);
@@ -1016,9 +1206,113 @@
       tips.append(ul);
       planBox.append(tips);
 
-      planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick one per meal. Talk to a sports dietitian for a personal plan."));
+      planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick the one you ate, or choose Other. Talk to a sports dietitian for a personal plan."));
       planBox.classList.remove("hidden");
     }
+
+    // ---------------------------------------------------------------
+    // Tabs and the Food Log calendar
+    // ---------------------------------------------------------------
+    const logView = document.getElementById("log-view");
+    const calMonth = new Date();
+    calMonth.setDate(1);
+    let selectedDay = new Date();
+
+    // Only meals with something filled in count as logged.
+    function loggedMeals(day) {
+      if (!day) return [];
+      return Object.entries(day.meals)
+        .filter(([, m]) => m.food)
+        .map(([title, m]) => ({ title, ...m }))
+        .sort((a, b) => a.time - b.time);
+    }
+
+    function renderCalendar() {
+      const log = getFoodLog();
+      logView.textContent = "";
+
+      const head = el("div", "cal-head");
+      const prev = el("button", "cal-nav", "‹");
+      prev.type = "button";
+      prev.setAttribute("aria-label", "Previous month");
+      const next = el("button", "cal-nav", "›");
+      next.type = "button";
+      next.setAttribute("aria-label", "Next month");
+      prev.addEventListener("click", () => {
+        calMonth.setMonth(calMonth.getMonth() - 1);
+        renderCalendar();
+      });
+      next.addEventListener("click", () => {
+        calMonth.setMonth(calMonth.getMonth() + 1);
+        renderCalendar();
+      });
+      head.append(prev, el("h2", "", calMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" })), next);
+      logView.append(head);
+
+      const grid = el("div", "cal-grid");
+      ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((d) => grid.append(el("div", "cal-weekday", d)));
+      for (let i = 0; i < calMonth.getDay(); i++) grid.append(el("div"));
+
+      const year = calMonth.getFullYear();
+      const month = calMonth.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      let loggedDays = 0;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        const key = dayKey(date);
+        const logged = loggedMeals(log[key]).length > 0;
+        if (logged) loggedDays++;
+        const btn = el("button", "cal-day", String(d));
+        btn.type = "button";
+        btn.classList.toggle("logged", logged);
+        btn.classList.toggle("today", key === todayKey());
+        btn.classList.toggle("selected", key === dayKey(selectedDay));
+        btn.setAttribute("aria-label", date.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) +
+          (logged ? ", food logged" : ""));
+        btn.addEventListener("click", () => {
+          selectedDay = date;
+          renderCalendar();
+        });
+        grid.append(btn);
+      }
+      logView.append(grid);
+      logView.append(el("div", "cal-count", `Food logged on ${loggedDays} ${loggedDays === 1 ? "day" : "days"} this month.`));
+
+      // Details for the selected day
+      const detail = el("div", "day-detail");
+      detail.append(el("h3", "", selectedDay.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })));
+      const day = log[dayKey(selectedDay)];
+      const meals = loggedMeals(day);
+      if (meals.length) {
+        if (day.workout) detail.append(el("div", "workout-summary", day.workout));
+        const ul = el("ul", "day-meals");
+        for (const m of meals) {
+          const li = el("li");
+          li.append(el("div", "time", fmtTime(m.time)), el("div", "title", m.title), el("div", "food", m.food));
+          ul.append(li);
+        }
+        detail.append(ul);
+      } else {
+        detail.append(el("p", "empty", dayKey(selectedDay) === todayKey()
+          ? "Nothing logged yet today. Plan today's fuel on the Today tab, then pick what you ate for each meal."
+          : "No food logged for this day."));
+      }
+      logView.append(detail);
+    }
+
+    function showTab(name) {
+      const log = name === "log";
+      document.getElementById("today-view").classList.toggle("hidden", log);
+      logView.classList.toggle("hidden", !log);
+      for (const [id, active] of [["tab-today", !log], ["tab-log", log]]) {
+        const tab = document.getElementById(id);
+        tab.classList.toggle("active", active);
+        tab.setAttribute("aria-selected", String(active));
+      }
+      if (log) renderCalendar();
+    }
+    document.getElementById("tab-today").addEventListener("click", () => showTab("today"));
+    document.getElementById("tab-log").addEventListener("click", () => showTab("log"));
 
     // ---------------------------------------------------------------
     // Disclaimer: shown as a popup the first time, then kept as fine
