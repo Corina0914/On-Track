@@ -467,6 +467,67 @@
     .cal-day.selected::after { background: #fff; }
     .cal-count { margin-top: 0.75rem; font-size: 0.85rem; color: #4a5a6a; }
     .day-detail { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #e1e7ed; }
+
+    /* Monthly summary under the Food Log calendar */
+    .month-summary { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e1e7ed; }
+    .month-summary h3 { font-size: 1.15rem; margin-bottom: 0.75rem; }
+    .month-summary h4 { font-size: 1rem; margin: 1.5rem 0 0.2rem; }
+    .month-summary .note { font-size: 0.8rem; color: #6b7a89; margin-bottom: 0.75rem; }
+    .month-summary .all-time { margin-top: 0.5rem; }
+    .month-summary .targets { margin-bottom: 0; }
+    .month-summary .target b { font-size: 1.05rem; }
+    .week-chart { display: flex; gap: 0.4rem; padding-top: 1.75rem; }
+    .week { position: relative; flex: 1; min-width: 0; text-align: center; border-radius: 6px; cursor: default; }
+    .week:focus-visible { outline: 2px solid #2e7d4f; outline-offset: 2px; }
+    .week-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      height: 130px;
+      border-bottom: 1px solid #c5d0db;
+    }
+    .week-value { margin-bottom: 0.2rem; font-size: 0.75rem; font-weight: 600; color: #1e3a5f; }
+    .week-bar { width: 60%; max-width: 44px; background: #2e7d4f; border-radius: 4px 4px 0 0; }
+    .week:hover .week-bar, .week:focus .week-bar { background: #1e5c38; }
+    .week-label { margin-top: 0.35rem; font-size: 0.72rem; color: #4a5a6a; }
+    .week-tag { min-height: 1.1em; font-size: 0.72rem; font-weight: 600; color: #1e3a5f; }
+    .week-tag.muted { font-weight: 400; color: #6b7a89; }
+    .week .tip {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      z-index: 2;
+      transform: translate(-50%, -100%);
+      padding: 0.35rem 0.6rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      color: #fff;
+      background: #1e3a5f;
+      border-radius: 6px;
+    }
+    .week:first-child .tip { left: 0; transform: translateY(-100%); }
+    .week:last-child .tip { left: auto; right: 0; transform: translateY(-100%); }
+    .week:hover .tip, .week:focus .tip { display: block; }
+    .history { list-style: none; }
+    .history li { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; font-size: 0.9rem; border-bottom: 1px solid #eef1f4; }
+    .history .when { flex: none; width: 6.5rem; font-weight: 600; }
+    .history .what { flex: 1; color: #4a5a6a; }
+    .effort { flex: none; padding: 0.05rem 0.55rem; font-size: 0.75rem; font-weight: 600; background: #eef1f4; border-radius: 999px; }
+    .effort.moderate { background: #b9dcc6; }
+    .effort.hard { color: #fff; background: #1e3a5f; }
+    .food-bars { list-style: none; }
+    .food-bars li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.25rem 0.75rem;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+    .food-bars .count { font-weight: 600; color: #4a5a6a; }
+    .food-bars .bar { grid-column: 1 / -1; height: 8px; background: #eef1f4; border-radius: 4px; }
+    .food-bars .bar span { display: block; height: 100%; background: #2e7d4f; border-radius: 4px; }
     .day-detail h3 { font-size: 1.15rem; margin-bottom: 0.2rem; }
     .day-meals { list-style: none; margin-top: 0.75rem; }
     .day-meals li { padding: 0.55rem 0; border-bottom: 1px solid #eef1f4; }
@@ -856,6 +917,7 @@
         raceTomorrow: raceTomorrowBox.checked,
       };
       localStorage.setItem(WORKOUT_KEY, JSON.stringify({ date: todayKey(), workout }));
+      saveWorkoutHistory(workout);
       workoutOverlay.classList.remove("show");
       renderSavedPlan();
       planBox.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1778,6 +1840,197 @@
           : "No food logged for this day."));
       }
       logView.append(detail);
+      logView.append(monthSummary(log));
+    }
+
+    // ---------------------------------------------------------------
+    // Monthly summary: harder vs. lighter weeks, workout history, and
+    // the most common foods
+    // ---------------------------------------------------------------
+    // { "2026-10-17": { type, duration, intensity } }, one workout per day
+    const HISTORY_KEY = "onTrackWorkoutHistory";
+    const EFFORT = { easy: 1, moderate: 2, hard: 3 };
+
+    // Training load = minutes x effort (easy 1, moderate 2, hard 3).
+    const loadOf = (w) => (w.type === "rest" ? 0 : w.duration * EFFORT[w.intensity]);
+
+    // Workout history was only kept from this version on. For older days,
+    // rebuild what we can from the workout line saved in the food log.
+    function parseWorkoutSummary(text) {
+      const parts = text.split(" · ");
+      const type = Object.keys(WORKOUT_TYPES).find((k) => WORKOUT_TYPES[k] === parts[0]);
+      if (!type) return null;
+      if (type === "rest") return { type, duration: 0, intensity: "easy" };
+      const intensity = type === "race" ? "hard" : EFFORT[parts[2]] ? parts[2] : "moderate";
+      return { type, duration: parseInt(parts[1], 10) || 0, intensity };
+    }
+
+    function getWorkoutHistory() {
+      let history = {};
+      try {
+        history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
+      } catch {}
+      for (const [key, day] of Object.entries(getFoodLog())) {
+        const w = !history[key] && day.workout && parseWorkoutSummary(day.workout);
+        if (w) history[key] = w;
+      }
+      const today = getTodayWorkout();
+      if (today && !history[todayKey()]) history[todayKey()] = today;
+      return history;
+    }
+
+    function saveWorkoutHistory(w) {
+      const history = getWorkoutHistory();
+      history[todayKey()] = { type: w.type, duration: w.duration, intensity: w.intensity };
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    }
+
+    const shortDate = (d, opts) => d.toLocaleDateString(undefined, { month: "short", day: "numeric", ...opts });
+    const keyToDate = (key) => {
+      const [y, m, d] = key.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    };
+
+    function monthSummary(log) {
+      const history = getWorkoutHistory();
+      const year = calMonth.getFullYear();
+      const month = calMonth.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const box = el("section", "month-summary");
+      box.append(el("h3", "", `${calMonth.toLocaleDateString(undefined, { month: "long" })} summary`));
+
+      // Go through the month once, grouping days into Sun-Sat weeks.
+      const days = [];
+      const weeks = [];
+      const foods = new Map();
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        if (d === 1 || date.getDay() === 0) weeks.push({ first: date, load: 0, sessions: 0, minutes: 0, hard: 0 });
+        const wk = weeks[weeks.length - 1];
+        wk.last = date;
+        const w = history[dayKey(date)];
+        if (w) {
+          days.push({ date, w });
+          if (w.type !== "rest") {
+            wk.load += loadOf(w);
+            wk.sessions++;
+            wk.minutes += w.duration;
+            if (w.intensity === "hard") wk.hard++;
+          }
+        }
+        for (const m of loggedMeals(log[dayKey(date)])) {
+          const k = m.food.trim().toLowerCase();
+          const entry = foods.get(k) || { food: m.food.trim(), count: 0 };
+          entry.count++;
+          foods.set(k, entry);
+        }
+      }
+      const sessions = days.filter((x) => x.w.type !== "rest");
+
+      // Headline numbers
+      const stats = el("div", "targets");
+      for (const [value, label] of [
+        [sessions.length, sessions.length === 1 ? "workout" : "workouts"],
+        [fmtIn(sessions.reduce((s, x) => s + x.w.duration, 0)), "training time"],
+        [sessions.filter((x) => x.w.intensity === "hard").length, "hard sessions"],
+        [days.filter((x) => x.w.type === "rest").length, "rest days"],
+      ]) {
+        const t = el("div", "target");
+        t.append(el("b", "", String(value)), el("small", "", label));
+        stats.append(t);
+      }
+      box.append(stats);
+
+      // Training load by week: one bar per week, tagged harder or lighter
+      // than this month's average week.
+      box.append(el("h4", "", "Harder vs. lighter weeks"));
+      box.append(el("div", "note", "Training load = workout minutes × effort (easy 1, moderate 2, hard 3). Weeks are compared with your average week this month."));
+      // The week still in progress isn't finished, so it isn't compared.
+      const isThisWeek = (wk) => wk.first <= today && today <= wk.last;
+      const active = weeks.filter((wk) => wk.sessions && !isThisWeek(wk));
+      const avg = active.reduce((s, wk) => s + wk.load, 0) / (active.length || 1);
+      const maxLoad = Math.max(1, ...weeks.map((wk) => wk.load));
+      const chart = el("div", "week-chart");
+      chart.setAttribute("role", "list");
+      chart.setAttribute("aria-label", "Training load by week");
+      for (const wk of weeks) {
+        let tag = "";
+        if (isThisWeek(wk)) tag = "This week";
+        else if (!wk.sessions) tag = wk.first > today ? "Upcoming" : "No workouts";
+        else if (active.length > 1 && wk.load >= avg * 1.2) tag = "▲ Harder";
+        else if (active.length > 1 && wk.load <= avg * 0.8) tag = "▼ Lighter";
+        else if (active.length > 1) tag = "Average";
+        const range = `${shortDate(wk.first)} – ${wk.last.getDate()}`;
+        const detail = wk.sessions
+          ? `${wk.sessions} ${wk.sessions === 1 ? "workout" : "workouts"} · ${fmtIn(wk.minutes)} · ${wk.hard} hard`
+          : "No workouts logged";
+
+        const col = el("div", "week");
+        col.tabIndex = 0;
+        col.setAttribute("role", "listitem");
+        const spoken = { "▲ Harder": "harder week", "▼ Lighter": "lighter week", Average: "average week" }[tag] || tag.toLowerCase();
+        col.setAttribute("aria-label", `${range}: load ${wk.load}${tag ? `, ${spoken}` : ""}. ${detail}`);
+        const area = el("div", "week-area");
+        if (wk.load) {
+          const bar = el("div", "week-bar");
+          bar.style.height = `${Math.max(3, (wk.load / maxLoad) * 100)}%`;
+          area.append(el("span", "week-value", String(wk.load)), bar);
+        }
+        col.append(area, el("div", "week-label", range), el("div", `week-tag${wk.sessions ? "" : " muted"}`, tag));
+        col.append(el("div", "tip", detail));
+        chart.append(col);
+      }
+      box.append(chart);
+
+      // Every workout this month, newest first, plus all-time totals
+      box.append(el("h4", "", "Workout history"));
+      if (days.length) {
+        const list = el("ul", "history");
+        for (const { date, w } of [...days].reverse()) {
+          const li = el("li");
+          const what = WORKOUT_TYPES[w.type] + (w.type === "rest" ? "" : ` · ${w.duration} min`);
+          const effort = w.type === "rest" ? "Rest" : w.type === "race" ? "Race" : w.intensity[0].toUpperCase() + w.intensity.slice(1);
+          li.append(
+            el("span", "when", shortDate(date, { weekday: "short" })),
+            el("span", "what", what),
+            el("span", `effort ${w.type === "rest" ? "" : w.intensity}`, effort),
+          );
+          list.append(li);
+        }
+        box.append(list);
+      } else {
+        box.append(el("p", "empty", "No workouts planned this month yet."));
+      }
+      const allKeys = Object.keys(history).filter((k) => history[k].type !== "rest");
+      if (allKeys.length) {
+        const first = allKeys.map(keyToDate).sort((a, b) => a - b)[0];
+        const minutes = allKeys.reduce((s, k) => s + history[k].duration, 0);
+        box.append(el("div", "note all-time",
+          `All time: ${allKeys.length} ${allKeys.length === 1 ? "workout" : "workouts"} · ${fmtIn(minutes)} of training since ${shortDate(first, { year: "numeric" })}.`));
+      }
+
+      // Most common foods this month, from what was logged
+      box.append(el("h4", "", "Most common foods"));
+      const top = [...foods.values()].sort((a, b) => b.count - a.count || a.food.localeCompare(b.food)).slice(0, 5);
+      if (top.length) {
+        const list = el("ul", "food-bars");
+        for (const f of top) {
+          const li = el("li");
+          const bar = el("div", "bar");
+          const fill = el("span");
+          fill.style.width = `${(f.count / top[0].count) * 100}%`;
+          bar.append(fill);
+          li.append(el("span", "", f.food), el("span", "count", `${f.count}×`), bar);
+          list.append(li);
+        }
+        box.append(list);
+      } else {
+        box.append(el("p", "empty", "Log what you eat on the Today tab and your most common foods will show up here."));
+      }
+      return box;
     }
 
     function showTab(name) {
