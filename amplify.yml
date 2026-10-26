@@ -8,5 +8,6 @@ frontend:
     baseDirectory: /
     files:
       - index.html
+      - sw.js
   cache:
     paths: []

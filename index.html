@@ -15,32 +15,52 @@
       background: linear-gradient(135deg, #1e3a5f, #2e7d4f);
       color: #fff;
       text-align: center;
-      padding: 2rem;
+      padding: 5rem 2rem 2rem;
     }
     main { max-width: 640px; }
     h1 { font-size: 3.5rem; letter-spacing: 0.02em; margin-bottom: 1rem; }
     p { font-size: 1.25rem; line-height: 1.6; opacity: 0.9; margin-bottom: 2.5rem; }
 
-    /* Profile summary on the main page */
+    /* Profile button in the top-left corner */
     .profile {
       display: none;
-      margin-bottom: 2rem;
-      padding: 1rem 1.5rem;
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      font-size: 1.05rem;
-    }
-    .profile.show { display: block; }
-    .profile strong { font-weight: 600; }
-    .link-btn {
-      margin-top: 0.5rem;
-      background: none;
-      border: none;
-      color: #fff;
-      text-decoration: underline;
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      align-items: center;
+      gap: 0.6rem;
+      max-width: calc(100vw - 2rem);
+      padding: 0.4rem 1rem 0.4rem 0.4rem;
       font: inherit;
-      font-size: 0.95rem;
+      color: #fff;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
       cursor: pointer;
+    }
+    .profile.show { display: flex; }
+    .profile:hover { background: rgba(255, 255, 255, 0.24); }
+    .profile .avatar {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      background: #fff;
+      color: #1e3a5f;
+    }
+    .profile .avatar svg { width: 1.2rem; height: 1.2rem; }
+    .profile .label { display: block; font-weight: 600; font-size: 0.95rem; line-height: 1.2; }
+    .profile .details {
+      display: block;
+      max-width: 240px;
+      overflow: hidden;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       opacity: 0.85;
     }
 
@@ -276,6 +296,95 @@
     .ai-coach .status { font-size: 0.9rem; color: #4a5a6a; margin-top: 0.5rem; }
     .ai-coach .status.error { color: #b3261e; }
 
+    /* Following the day: the "right now" card and live timeline */
+    .now-card {
+      margin: 1rem 0;
+      padding: 0.9rem 1rem;
+      color: #fff;
+      background: #1e3a5f;
+      border-radius: 10px;
+    }
+    .now-card.eat { background: #2e7d4f; }
+    .now-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.8; }
+    .now-title { margin: 0.1rem 0; font-size: 1.2rem; font-weight: 600; }
+    .now-detail { font-size: 0.9rem; opacity: 0.9; }
+    .reminders {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem 0.75rem;
+      margin-top: 0.75rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .reminders button {
+      padding: 0.35rem 0.9rem;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1e3a5f;
+      background: #fff;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .reminders small { font-size: 0.8rem; opacity: 0.85; }
+    .timeline > li.past { opacity: 0.5; }
+    .timeline > li.now::before { background: #f2a900; box-shadow: 0 0 0 4px rgba(242, 169, 0, 0.3); }
+    .chip {
+      display: inline-block;
+      margin-left: 0.4rem;
+      padding: 0.05rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 999px;
+      vertical-align: middle;
+    }
+    .chip:empty { display: none; }
+    .chip.now { background: #f2a900; color: #1e3a5f; }
+    .chip.next { background: #1e3a5f; color: #fff; }
+    .foods summary {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2e7d4f;
+      cursor: pointer;
+    }
+
+    /* Pop-up reminder when an eating window opens */
+    .toast {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      z-index: 10;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: calc(100vw - 2rem);
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      color: #1e3a5f;
+      text-align: left;
+      background: #fff;
+      border-left: 5px solid #f2a900;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+    .toast.show { display: flex; }
+    .toast div div { font-size: 0.9rem; color: #4a5a6a; }
+    .toast button {
+      flex: none;
+      padding: 0.4rem 0.9rem;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      background: #2e7d4f;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     /* Tabs: Today / Food Log */
     .tabs {
       display: inline-flex;
@@ -388,6 +497,16 @@
   </style>
 </head>
 <body>
+  <button type="button" class="profile" id="profile" title="Edit my profile">
+    <span class="avatar" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5z"/></svg>
+    </span>
+    <span>
+      <span class="label">My profile</span>
+      <span class="details" id="profile-text"></span>
+    </span>
+  </button>
+
   <main>
     <h1>On-Track</h1>
     <p>AI that helps track and field athletes know exactly what to eat before and after training or racing, based on their event and workout.</p>
@@ -396,10 +515,6 @@
       <button type="button" class="tab" role="tab" id="tab-log" aria-selected="false" aria-controls="log-view">Food Log</button>
     </div>
     <div id="today-view" role="tabpanel" aria-labelledby="tab-today">
-      <div class="profile" id="profile">
-        <div id="profile-text"></div>
-        <button type="button" class="link-btn" id="edit-profile">Edit my info</button>
-      </div>
       <button type="button" class="big-btn" id="open-workout">Plan Today's Fuel</button>
       <section class="plan hidden" id="plan" aria-live="polite"></section>
     </div>
@@ -454,7 +569,7 @@
   <div class="overlay" id="setup" role="dialog" aria-modal="true" aria-labelledby="setup-title">
     <form class="card" id="setup-form" novalidate>
       <h2 id="setup-title">Tell us about you</h2>
-      <div class="sub">This helps On-Track tailor food advice to your events and body.</div>
+      <div class="sub" id="setup-sub">This helps On-Track tailor food advice to your events and body.</div>
 
       <fieldset class="field">
         <legend>Your events <span class="hint">(pick all that you do)</span></legend>
@@ -481,8 +596,17 @@
       </div>
 
       <div class="error" id="setup-error" role="alert"></div>
-      <button type="submit" class="primary">Save &amp; Continue</button>
+      <button type="submit" class="primary" id="save-setup">Save &amp; Continue</button>
+      <button type="button" class="secondary hidden" id="cancel-setup">Cancel</button>
     </form>
+  </div>
+
+  <div class="toast" id="toast" role="status">
+    <div>
+      <strong id="toast-title"></strong>
+      <div id="toast-body"></div>
+    </div>
+    <button type="button" id="toast-close">Got it</button>
   </div>
 
   <div class="fine-print" id="fine-print"></div>
@@ -556,6 +680,8 @@
     }
     const eventBoxes = [...eventList.querySelectorAll("input")];
 
+    // First open asks for everything; after that the same form opens with
+    // the saved answers filled in so the athlete can change just one thing.
     function openSetup() {
       const profile = getAthleteProfile();
       if (profile) {
@@ -565,19 +691,32 @@
         form.elements.unit.value = profile.weightUnit;
         weightInput.value = profile.weight;
       }
+      document.getElementById("setup-title").textContent = profile ? "Your profile" : "Tell us about you";
+      document.getElementById("setup-sub").textContent = profile
+        ? "Change anything that's different. Your food plan updates as soon as you save."
+        : "This helps On-Track tailor food advice to your events and body.";
+      document.getElementById("save-setup").textContent = profile ? "Save Changes" : "Save & Continue";
+      document.getElementById("cancel-setup").classList.toggle("hidden", !profile);
       errorBox.textContent = "";
       overlay.classList.add("show");
       eventBoxes[0].focus();
     }
 
+    function closeSetup() {
+      if (!getAthleteProfile()) return; // first open: the profile is required
+      overlay.classList.remove("show");
+      document.getElementById("profile").focus();
+    }
+    document.getElementById("cancel-setup").addEventListener("click", closeSetup);
+    overlay.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeSetup();
+    });
+
     function showProfile() {
       const profile = getAthleteProfile();
       if (!profile) return;
-      const text = document.getElementById("profile-text");
-      text.textContent = "";
-      const events = document.createElement("strong");
-      events.textContent = profile.events.map((e) => e.event).join(", ");
-      text.append(events, ` · ${profile.gender} · ${profile.weight} ${profile.weightUnit}`);
+      document.getElementById("profile-text").textContent =
+        `${profile.events.map((e) => e.event).join(", ")} · ${profile.gender} · ${profile.weight} ${profile.weightUnit}`;
       document.getElementById("profile").classList.add("show");
     }
 
@@ -614,7 +753,7 @@
       renderSavedPlan();
     });
 
-    document.getElementById("edit-profile").addEventListener("click", openSetup);
+    document.getElementById("profile").addEventListener("click", openSetup);
 
     // ---------------------------------------------------------------
     // Today's workout and fueling plan
@@ -902,6 +1041,7 @@
           fixed.push({
             time: rt,
             title: "Light snack after",
+            after: true,
             size: "small",
             carbs: 0.3,
             protein: 0.25,
@@ -1017,6 +1157,29 @@
           dinner.foods = FOODS.raceEveDinner;
           dinner.why += " With a race tomorrow, make this carb-focused and stick to familiar foods - go easy on fiber, fat and spice.";
         }
+      }
+
+      // Eating windows: about an hour around each time, so athletes aren't
+      // tied to an exact minute. Food before a workout has to finish in time
+      // to digest; food after it goes in the hour after finishing.
+      const round5min = (m) => Math.round(m / 5) * 5;
+      for (const x of entries) {
+        if (x.workout) {
+          x.start = T;
+          x.end = E;
+          continue;
+        }
+        let start = x.time - 30;
+        let end = x.time + 30;
+        if (x.recovery || x.after) {
+          start = E;
+          end = E + 60;
+        } else if (load !== "rest" && x.time < T) {
+          end = Math.min(end, T - (x.size === "small" ? 15 : 90));
+          start = Math.min(start, end - 45);
+        }
+        x.start = round5min(start);
+        x.end = round5min(end);
       }
 
       // Tips
@@ -1197,7 +1360,7 @@
       const log = getFoodLog();
       const day = log[todayKey()] || { meals: {} };
       day.workout = workoutSummary(getTodayWorkout());
-      day.meals[x.title] = { time: x.time, food, other };
+      day.meals[x.title] = { time: x.time, start: x.start, end: x.end, food, other };
       log[todayKey()] = day;
       saveFoodLog(log);
     }
@@ -1210,7 +1373,7 @@
       if (!day) return;
       const kept = {};
       for (const x of plan.entries) {
-        if (!x.workout && day.meals[x.title]) kept[x.title] = { ...day.meals[x.title], time: x.time };
+        if (!x.workout && day.meals[x.title]) kept[x.title] = { ...day.meals[x.title], time: x.time, start: x.start, end: x.end };
       }
       if (Object.keys(kept).length) {
         log[todayKey()] = { workout: workoutSummary(w), meals: kept };
@@ -1221,7 +1384,7 @@
     }
 
     // Radio list of the suggested foods plus "Other" with a text box.
-    function mealPicker(x, i, saved) {
+    function mealPicker(x, i, saved, onLog) {
       const box = el("fieldset", "pick");
       box.append(el("legend", "pick-label", "What did you eat?"));
       const name = `meal-${i}`;
@@ -1252,9 +1415,11 @@
         const choice = box.querySelector("input[type=radio]:checked");
         if (!choice) return;
         const other = choice.value === OTHER;
+        const food = other ? otherInput.value.trim() : choice.value;
         otherInput.classList.toggle("hidden", !other);
-        logMeal(x, other ? otherInput.value.trim() : choice.value, other);
+        logMeal(x, food, other);
         status.textContent = "Saved to your food log";
+        onLog(food);
       };
       box.addEventListener("change", (e) => {
         record();
@@ -1267,6 +1432,9 @@
     function renderSavedPlan() {
       const profile = getAthleteProfile();
       const w = getTodayWorkout();
+      renderedDay = todayKey();
+      schedule = null;
+      document.title = "On-Track";
       if (!profile || !w) {
         planBox.classList.add("hidden");
         document.getElementById("open-workout").textContent = "Plan Today's Fuel";
@@ -1294,32 +1462,52 @@
       }
       planBox.append(targets);
 
+      // What's happening right now; filled in by updateTiming().
+      const nowCard = el("div", "now-card");
+      nowCard.setAttribute("aria-live", "off"); // the countdown changes every minute
+      const nowText = el("div");
+      nowCard.append(nowText, remindersControl());
+      planBox.insertBefore(nowCard, approach);
+
+      // Each eating window: time range, what it is, how much, and why.
+      // Food ideas and the "what did you eat?" picker fold away until needed.
       const list = el("ol", "timeline");
+      const items = [];
       for (const [i, x] of plan.entries.entries()) {
         const li = el("li", x.workout ? "workout" : "");
-        li.append(el("div", "time", fmtTime(x.time)));
+        li.append(el("div", "time", fmtRange(x.start, x.end)));
         const title = el("div", "title", x.workout ? `Workout: ${x.title}` : x.title);
         if (x.size) {
           title.append(el("span", `size ${x.size}`, { small: "Small", medium: "Medium", big: "Big" }[x.size]));
         }
+        const chip = el("span", "chip");
+        title.append(chip);
         li.append(title);
         if (x.workout) {
           if (x.during) {
             li.append(el("div", "grams", "~30-60 g carbs per hour during"));
-            const ul = el("ul");
-            FOODS.during.forEach((f) => ul.append(el("li", "", f)));
-            li.append(ul);
+            li.append(el("div", "why", `Ideas: ${FOODS.during.join(", ")}.`));
           } else {
             li.append(el("div", "why", "Sip water during your session."));
           }
         } else {
-          li.append(el("div", "grams", `~${x.carbsG} g carbs` + (x.proteinG ? ` · ${x.proteinG} g protein` : "")));
-          li.append(mealPicker(x, i, todayLog && todayLog.meals[x.title]));
+          li.append(el("div", "grams", gramsText(x)));
           li.append(el("div", "why", x.why));
+          const saved = todayLog && todayLog.meals[x.title];
+          const foods = el("details", "foods");
+          const summary = el("summary");
+          const setSummary = (food) => {
+            summary.textContent = food ? `✓ You ate: ${food}` : "Food ideas · log what you ate";
+          };
+          setSummary(saved && saved.food);
+          foods.append(summary, mealPicker(x, i, saved, setSummary));
+          li.append(foods);
         }
         list.append(li);
+        items.push({ x, li, chip });
       }
       planBox.append(list);
+      schedule = { items, nowText };
 
       const tips = el("div", "tips");
       tips.append(el("h3", "", "Tips for today"));
@@ -1331,7 +1519,176 @@
 
       planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick the one you ate, or choose Other. Talk to a sports dietitian for a personal plan."));
       planBox.classList.remove("hidden");
+      updateTiming();
+      checkReminders(true); // the athlete is looking at the plan right now
     }
+
+    // ---------------------------------------------------------------
+    // Following the day: what to eat now, what's next, and reminders
+    // when each eating window opens. Reminders work while On-Track is
+    // open in a tab (it can be in the background).
+    // ---------------------------------------------------------------
+    const REMINDERS_KEY = "onTrackReminders";
+    const NOTIFIED_KEY = "onTrackNotified";
+    let schedule = null;
+    let renderedDay = todayKey();
+
+    const nowMinutes = () => {
+      const d = new Date();
+      return d.getHours() * 60 + d.getMinutes();
+    };
+
+    function fmtRange(a, b) {
+      const [ta, pa] = fmtTime(a).split(" ");
+      const [tb, pb] = fmtTime(b).split(" ");
+      return pa === pb ? `${ta} – ${tb} ${pb}` : `${ta} ${pa} – ${tb} ${pb}`;
+    }
+
+    function fmtIn(mins) {
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return h ? (m ? `${h} h ${m} min` : `${h} h`) : `${m} min`;
+    }
+
+    const gramsText = (x) => `~${x.carbsG} g carbs` + (x.proteinG ? ` · ${x.proteinG} g protein` : "");
+
+    function updateTiming() {
+      if (!schedule) return;
+      const now = nowMinutes();
+      const isOpen = (x) => now >= x.start && now < x.end;
+      const current = schedule.items.find((it) => !it.x.workout && isOpen(it.x));
+      const training = schedule.items.find((it) => it.x.workout && isOpen(it.x));
+      const next = schedule.items.find((it) => it.x.start > now);
+
+      for (const it of schedule.items) {
+        const open = isOpen(it.x);
+        it.li.classList.toggle("now", open);
+        it.li.classList.toggle("past", now >= it.x.end);
+        it.chip.className = open ? "chip now" : it === next ? "chip next" : "chip";
+        it.chip.textContent = open ? (it.x.workout ? "In progress" : "Now") : it === next ? "Up next" : "";
+      }
+
+      let label, title, detail;
+      if (current) {
+        label = "Time to eat";
+        title = current.x.title;
+        detail = `Eat by ${fmtTime(current.x.end)} · ${gramsText(current.x)}`;
+      } else if (training) {
+        label = "Training now";
+        title = training.x.title;
+        detail = next ? `Next: ${next.x.title}, ${fmtRange(next.x.start, next.x.end)}` : "Sip water as you go.";
+      } else if (next) {
+        label = `Up next · in ${fmtIn(next.x.start - now)}`;
+        title = next.x.workout ? `Workout: ${next.x.title}` : next.x.title;
+        detail = fmtRange(next.x.start, next.x.end) + (next.x.workout ? "" : ` · ${gramsText(next.x)}`);
+      } else {
+        label = "All done";
+        title = "That's everything for today";
+        detail = "Keep drinking water and get a good night's sleep. Nice work!";
+      }
+      const box = schedule.nowText;
+      box.textContent = "";
+      box.append(el("div", "now-label", label), el("div", "now-title", title), el("div", "now-detail", detail));
+      box.parentNode.classList.toggle("eat", !!current);
+      document.title = current ? `Time to eat: ${current.x.title} - On-Track` : "On-Track";
+    }
+
+    // ---- Reminders ----
+    const remindersOn = () =>
+      "Notification" in window && Notification.permission === "granted" && localStorage.getItem(REMINDERS_KEY) === "on";
+
+    function remindersControl() {
+      const wrap = el("div", "reminders");
+      if (!("Notification" in window)) {
+        wrap.append(el("small", "", "Keep On-Track open and it will show you when it's time to eat."));
+        return wrap;
+      }
+      const btn = el("button");
+      btn.type = "button";
+      const note = el("small");
+      const refresh = () => {
+        const blocked = Notification.permission === "denied";
+        btn.classList.toggle("hidden", blocked);
+        btn.textContent = remindersOn() ? "Turn off reminders" : "Turn on meal reminders";
+        note.textContent = blocked
+          ? "Notifications are blocked for this site. Turn them on in your browser settings to get reminders."
+          : remindersOn()
+            ? "Reminders are on. Keep On-Track open in a tab to get them."
+            : "Get a notification when each eating window opens.";
+      };
+      btn.addEventListener("click", async () => {
+        if (remindersOn()) {
+          localStorage.setItem(REMINDERS_KEY, "off");
+        } else if ((await Notification.requestPermission()) === "granted") {
+          localStorage.setItem(REMINDERS_KEY, "on");
+          registerWorker();
+        }
+        refresh();
+      });
+      refresh();
+      wrap.append(btn, note);
+      return wrap;
+    }
+
+    // Phones only show notifications through a service worker (sw.js).
+    function registerWorker() {
+      if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      }
+    }
+    if (remindersOn()) registerWorker();
+
+    async function notify(title, body) {
+      try {
+        const reg = "serviceWorker" in navigator && (await navigator.serviceWorker.getRegistration());
+        if (reg) await reg.showNotification(title, { body, tag: "ontrack-meal" });
+        else new Notification(title, { body, tag: "ontrack-meal" });
+      } catch {
+        showToast(title, body);
+      }
+    }
+
+    const toast = document.getElementById("toast");
+    function showToast(title, body) {
+      document.getElementById("toast-title").textContent = title;
+      document.getElementById("toast-body").textContent = body;
+      toast.classList.add("show");
+    }
+    document.getElementById("toast-close").addEventListener("click", () => toast.classList.remove("show"));
+
+    // Let the athlete know once per eating window, when it opens. Windows
+    // already open when the plan is shown are skipped (silent) because the
+    // athlete can see them on screen.
+    function checkReminders(silent) {
+      if (!schedule) return;
+      const now = nowMinutes();
+      let done = [];
+      try {
+        const saved = JSON.parse(localStorage.getItem(NOTIFIED_KEY));
+        if (saved && saved.date === todayKey()) done = saved.keys;
+      } catch {}
+      const keyOf = (x) => `${x.title}@${x.start}`;
+      const due = schedule.items
+        .map((it) => it.x)
+        .filter((x) => !x.workout && now >= x.start && now < x.end && !done.includes(keyOf(x)));
+      if (!due.length) return;
+      localStorage.setItem(NOTIFIED_KEY, JSON.stringify({ date: todayKey(), keys: [...done, ...due.map(keyOf)] }));
+      if (silent) return;
+
+      const x = due[due.length - 1];
+      const title = `Time for your ${x.title.toLowerCase()}`;
+      const body = `Eat between ${fmtRange(x.start, x.end)} · ${gramsText(x)}. Idea: ${x.foods[0]}.`;
+      if (remindersOn() && document.hidden) notify(title, body);
+      else showToast(title, body);
+    }
+
+    function tick() {
+      if (todayKey() !== renderedDay) return renderSavedPlan(); // a new day
+      updateTiming();
+      checkReminders(false);
+    }
+    setInterval(tick, 30000);
+    document.addEventListener("visibilitychange", tick);
 
     // ---------------------------------------------------------------
     // Tabs and the Food Log calendar
@@ -1411,7 +1768,7 @@
         const ul = el("ul", "day-meals");
         for (const m of meals) {
           const li = el("li");
-          li.append(el("div", "time", fmtTime(m.time)), el("div", "title", m.title), el("div", "food", m.food));
+          li.append(el("div", "time", m.start === undefined ? fmtTime(m.time) : fmtRange(m.start, m.end)), el("div", "title", m.title), el("div", "food", m.food));
           ul.append(li);
         }
         detail.append(ul);
