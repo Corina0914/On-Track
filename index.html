@@ -255,6 +255,27 @@
     .tips ul { margin-left: 1.1rem; font-size: 0.95rem; line-height: 1.5; }
     .disclaimer { margin-top: 1rem; font-size: 0.8rem; color: #6b7a89; }
 
+    /* AI coach: why a sprinter and a miler eat differently */
+    .ai-coach {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      border: 1.5px solid #c5d0db;
+      border-radius: 12px;
+      background: #f6f9fc;
+    }
+    .ai-coach h3 { font-size: 1.05rem; margin-bottom: 0.25rem; }
+    .ai-coach .sub { font-size: 0.9rem; color: #4a5a6a; margin-bottom: 0.75rem; }
+    .ai-coach .compare { display: flex; gap: 0.5rem; margin: 0.75rem 0; }
+    .ai-coach .compare > div { flex: 1; padding: 0.6rem; background: #fff; border: 1.5px solid #e1e7ed; border-radius: 10px; }
+    .ai-coach .compare b { display: block; }
+    .ai-coach .compare small { display: block; color: #4a5a6a; font-size: 0.85rem; }
+    .ai-coach .headline { font-weight: 600; margin: 0.5rem 0; }
+    .ai-coach h4 { font-size: 0.95rem; margin: 0.6rem 0 0.15rem; }
+    .ai-coach p, .ai-coach li { font-size: 0.95rem; line-height: 1.5; }
+    .ai-coach ul { margin: 0.25rem 0 0 1.1rem; }
+    .ai-coach .status { font-size: 0.9rem; color: #4a5a6a; margin-top: 0.5rem; }
+    .ai-coach .status.error { color: #b3261e; }
+
     /* Tabs: Today / Food Log */
     .tabs {
       display: inline-flex;
@@ -1054,6 +1075,107 @@
       return summary + (w.raceTomorrow ? " · race tomorrow" : "");
     }
 
+    // ---- AI coach ----
+    // The rules engine above works out the numbers. For the explanation, we
+    // build the same workout's plan for a sprinter and for a miler and ask
+    // the AI (Claude, via our server function in api/explain-plan) why they
+    // differ. Paste the function's URL here after deploying it.
+    const AI_ENDPOINT = "";
+    const SPRINTER = { events: [{ event: "100m", group: "Sprints" }, { event: "200m", group: "Sprints" }], eventGroups: ["Sprints"] };
+    const MILER = { events: [{ event: "Mile", group: "Middle Distance" }], eventGroups: ["Middle Distance"] };
+    const aiCache = new Map();
+
+    // Only the parts of a plan the AI needs (no food lists).
+    const planForAi = (plan) => ({
+      approach: plan.approach,
+      carbsG: plan.carbsG,
+      proteinG: plan.proteinG,
+      entries: plan.entries.map((x) => x.workout
+        ? { time: x.time, title: x.title, workout: true }
+        : { time: x.time, title: x.title, size: x.size, carbsG: x.carbsG, proteinG: x.proteinG }),
+    });
+
+    // The first recovery meal or snack after the workout.
+    const recoveryOf = (plan) => {
+      const i = plan.entries.findIndex((x) => x.workout);
+      return plan.entries.slice(i + 1).find((x) => !x.workout);
+    };
+
+    function aiCoach(profile, w) {
+      const box = el("section", "ai-coach");
+      box.append(el("h3", "", "Why this plan? Ask the AI coach"));
+      box.append(el("div", "sub", "See how a sprinter and a miler should eat differently after this same practice, and which fits you."));
+
+      const sprinterPlan = buildPlan({ ...profile, ...SPRINTER }, w);
+      const milerPlan = buildPlan({ ...profile, ...MILER }, w);
+      const compare = el("div", "compare");
+      for (const [name, plan] of [["Sprinter", sprinterPlan], ["Miler", milerPlan]]) {
+        const col = el("div");
+        const rec = recoveryOf(plan);
+        col.append(el("b", "", name), el("small", "", `${plan.carbsG} g carbs · ${plan.proteinG} g protein today`));
+        if (rec) col.append(el("small", "", `After practice: ~${rec.carbsG} g carbs · ${rec.proteinG} g protein`));
+        compare.append(col);
+      }
+      box.append(compare);
+
+      const result = el("div");
+      const status = el("div", "status");
+      const btn = el("button", "primary", "Explain the difference");
+      btn.type = "button";
+      box.append(btn, status, result);
+
+      const request = {
+        workout: { summary: workoutSummary(w), notes: w.notes },
+        athlete: { events: profile.events.map((e) => e.event), gender: profile.gender, weightKg: profile.weightKg },
+        sprinterPlan: planForAi(sprinterPlan),
+        milerPlan: planForAi(milerPlan),
+      };
+      const cacheKey = JSON.stringify(request);
+
+      const show = (data) => {
+        result.textContent = "";
+        result.append(el("p", "headline", data.headline));
+        result.append(el("h4", "", "Sprinter"), el("p", "", data.sprinter));
+        result.append(el("h4", "", "Miler"), el("p", "", data.miler));
+        result.append(el("h4", "", "Key differences"));
+        const ul = el("ul");
+        data.keyDifferences.forEach((d) => ul.append(el("li", "", d)));
+        result.append(ul);
+        result.append(el("h4", "", "For you"), el("p", "", data.forYou));
+        btn.classList.add("hidden");
+      };
+      if (aiCache.has(cacheKey)) show(aiCache.get(cacheKey));
+
+      btn.addEventListener("click", async () => {
+        if (!AI_ENDPOINT) {
+          status.className = "status error";
+          status.textContent = "The AI coach isn't connected yet.";
+          return;
+        }
+        btn.disabled = true;
+        status.className = "status";
+        status.textContent = "The AI coach is thinking...";
+        try {
+          const res = await fetch(AI_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || "The AI coach is unavailable right now.");
+          aiCache.set(cacheKey, data);
+          status.textContent = "";
+          show(data);
+        } catch (err) {
+          status.className = "status error";
+          status.textContent = err instanceof TypeError ? "Couldn't reach the AI coach. Check your connection." : err.message;
+        } finally {
+          btn.disabled = false;
+        }
+      });
+      return box;
+    }
+
     // ---- Food log: what the athlete actually ate, saved per day ----
     // { "2026-10-17": { workout: "...", meals: { "Lunch": { time, food, other } } } }
     const LOG_KEY = "onTrackFoodLog";
@@ -1205,6 +1327,7 @@
       plan.tips.forEach((t) => ul.append(el("li", "", t)));
       tips.append(ul);
       planBox.append(tips);
+      if (w.type !== "rest") planBox.append(aiCoach(profile, w));
 
       planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick the one you ate, or choose Other. Talk to a sports dietitian for a personal plan."));
       planBox.classList.remove("hidden");

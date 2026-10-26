@@ -1,0 +1,9 @@
+{
+  "name": "ontrack-explain-plan",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
