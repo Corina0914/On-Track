@@ -296,26 +296,26 @@
     .tips ul { margin-left: 1.1rem; font-size: 0.95rem; line-height: 1.5; }
     .disclaimer { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); }
 
-    /* AI coach: why a sprinter and a miler eat differently */
-    .ai-coach {
+    /* Why this plan: explanation and comparison with other events */
+    .why-plan {
       margin-top: 1.25rem;
       padding: 1rem;
+      background: var(--surface-2);
       border: 1.5px solid var(--border-strong);
       border-radius: 12px;
-      background: var(--surface-2);
     }
-    .ai-coach h3 { font-size: 1.05rem; margin-bottom: 0.25rem; }
-    .ai-coach .sub { font-size: 0.9rem; color: var(--text-2); margin-bottom: 0.75rem; }
-    .ai-coach .compare { display: flex; gap: 0.5rem; margin: 0.75rem 0; }
-    .ai-coach .compare > div { flex: 1; padding: 0.6rem; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; }
-    .ai-coach .compare b { display: block; }
-    .ai-coach .compare small { display: block; color: var(--text-2); font-size: 0.85rem; }
-    .ai-coach .headline { font-weight: 600; margin: 0.5rem 0; }
-    .ai-coach h4 { font-size: 0.95rem; margin: 0.6rem 0 0.15rem; }
-    .ai-coach p, .ai-coach li { font-size: 0.95rem; line-height: 1.5; }
-    .ai-coach ul { margin: 0.25rem 0 0 1.1rem; }
-    .ai-coach .status { font-size: 0.9rem; color: var(--text-2); margin-top: 0.5rem; }
-    .ai-coach .status.error { color: var(--error); }
+    .why-plan h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+    .why-plan h4 { font-size: 0.95rem; margin: 1rem 0 0.2rem; }
+    .why-plan p, .why-plan li { font-size: 0.95rem; line-height: 1.5; }
+    .why-plan .note { margin: 0.2rem 0 0.5rem; font-size: 0.8rem; color: var(--muted); }
+    .why-plan ul { margin: 0.3rem 0 0 1.1rem; }
+    .why-plan li { margin-bottom: 0.3rem; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .compare-table th, .compare-table td { padding: 0.45rem 0.4rem; text-align: right; border-bottom: 1px solid var(--border); }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table thead th { font-size: 0.75rem; font-weight: 600; color: var(--text-2); }
+    .compare-table tbody th { font-weight: 600; }
+    .compare-table tr.you th, .compare-table tr.you td { color: var(--cyan); font-weight: 600; }
 
     /* Following the day: the "right now" card and live timeline */
     .now-card {
@@ -1004,6 +1004,78 @@
       return null;
     }
 
+    // Event types: how each one shifts the daily carb target (g/kg, added
+    // to the training-load base), its protein target (g/kg), and plain
+    // explanations shown under the plan.
+    const EVENT_TYPES = {
+      sprinter: {
+        name: "Sprinter",
+        plural: "Sprinters",
+        groups: ["Sprints", "Hurdles"],
+        carbAdj: -0.5,
+        protein: 1.8,
+        demand: "Sprints and hurdles are short, all-out efforts. Your muscles power them mostly with stored creatine phosphate and fast-burning carbs, so even a hard session uses only part of your energy stores.",
+        fuel: "You need enough carbs to train fast, but not the large amounts distance runners need. Protein matters more for you: explosive work strains fast-twitch muscle fibers, and protein repairs them and builds speed and power.",
+        why: "moderate carbs, but lots of protein to rebuild fast-twitch muscle after explosive work",
+      },
+      middle: {
+        name: "Middle distance",
+        plural: "Middle-distance runners",
+        groups: ["Middle Distance"],
+        carbAdj: 0.5,
+        protein: 1.6,
+        demand: "The 800m to the mile mixes speed and endurance. Races are run close to your max, using both aerobic energy and fast-burning carbs.",
+        fuel: "You need plenty of carbs to handle mileage and hard interval days, plus solid protein to recover from fast running. Your plan balances the two, between a sprinter's and a distance runner's.",
+        why: "high carbs with solid protein, a balance of speed and endurance",
+      },
+      distance: {
+        name: "Long distance",
+        plural: "Distance runners",
+        groups: ["Long Distance", "Race Walk"],
+        carbAdj: 1,
+        protein: 1.5,
+        demand: "Distance training means a lot of steady miles. Your body burns the carbs stored in your muscles (glycogen) all through every run, and big training weeks can drain them.",
+        fuel: "Carbs are your main fuel, so your plan is built around refilling glycogen, especially in the first hour after you finish, when muscles soak up carbs fastest. Protein still repairs muscle, but you need a little less for your body weight than power athletes.",
+        why: "the most carbs, because long runs burn through stored energy",
+      },
+      jumper: {
+        name: "Jumper",
+        plural: "Jumpers",
+        groups: ["Jumps"],
+        carbAdj: -0.5,
+        protein: 1.7,
+        demand: "Jumps are a few seconds of maximum speed and power. Being powerful for your body weight matters a lot, because you have to lift yourself.",
+        fuel: "Your plan keeps carbs moderate, enough for runway and plyometric work without extra weight, and keeps protein high to build springy, powerful legs. Lighter meals before practice help you feel quick.",
+        why: "moderate carbs and high protein, to stay light but powerful",
+      },
+      thrower: {
+        name: "Thrower",
+        plural: "Throwers",
+        groups: ["Throws"],
+        carbAdj: -1,
+        protein: 2,
+        demand: "Throws are short bursts of maximum strength. Throwers spend a lot of time lifting heavy and carry more muscle.",
+        fuel: "Your plan has the most protein, to build and repair strength, and fewer carbs for your body weight, because throwing sessions don't burn through energy stores the way running does.",
+        why: "the most protein and the fewest carbs, to build strength and muscle",
+      },
+      multi: {
+        name: "Multi-events",
+        plural: "Multi-event athletes",
+        groups: ["Multi-Events"],
+        carbAdj: 0,
+        protein: 1.7,
+        demand: "Multi-events combine sprints, hurdles, jumps, throws and a longer race, so practices are long and cover several events.",
+        fuel: "Your plan sits in the middle: enough carbs for long practices that switch between events, and high protein for all the power and strength work.",
+        why: "a middle ground: carbs for long practices and high protein for power work",
+      },
+    };
+
+    function eventTypesOf(profile) {
+      const types = Object.keys(EVENT_TYPES).filter((t) =>
+        EVENT_TYPES[t].groups.some((g) => profile.eventGroups.includes(g)));
+      return types.length ? types : ["multi"];
+    }
+
     function trainingLoad(w) {
       if (w.type === "rest") return "rest";
       if (w.type === "race") return w.duration >= 90 ? "veryHigh" : "high";
@@ -1028,15 +1100,19 @@
       const E = T + w.duration;
 
       // Daily targets (g per kg of body weight)
+      // Each event type shifts carbs and sets protein; athletes in several
+      // groups get the average of their types.
+      const types = eventTypesOf(profile);
+      const avgOf = (key) => types.reduce((s, t) => s + EVENT_TYPES[t][key], 0) / types.length;
+      const carbAdj = avgOf("carbAdj");
       let carbKg = { rest: 3, light: 4, moderate: 5.5, high: 7, veryHigh: 9 }[load];
-      if (load !== "rest" && (endurance || ["long", "tempo"].includes(w.type))) carbKg += 0.5;
-      if (power && !endurance) carbKg -= 0.5;
+      if (load !== "rest") carbKg += ["long", "tempo"].includes(w.type) ? Math.max(carbAdj, 0.5) : carbAdj;
       if (isRace) carbKg = Math.max(carbKg, 7);
       if (w.raceTomorrow) carbKg = Math.max(carbKg, endurance ? 8 : 6);
       carbKg = Math.max(3, carbKg);
-      let proteinKg = power && !endurance ? 1.8 : endurance && !power ? 1.5 : 1.6;
+      let proteinKg = avgOf("protein");
       if (w.type === "lift") proteinKg += 0.2;
-      proteinKg = Math.min(2, proteinKg);
+      proteinKg = Math.min(2.2, proteinKg);
 
       const pickFoods = (key) => {
         const list = [...FOODS[key]];
@@ -1325,104 +1401,76 @@
       return summary + (w.raceTomorrow ? " · race tomorrow" : "");
     }
 
-    // ---- AI coach ----
-    // The rules engine above works out the numbers. For the explanation, we
-    // build the same workout's plan for a sprinter and for a miler and ask
-    // the AI (Claude, via our server function in api/explain-plan) why they
-    // differ. Paste the function's URL here after deploying it.
-    const AI_ENDPOINT = "";
-    const SPRINTER = { events: [{ event: "100m", group: "Sprints" }, { event: "200m", group: "Sprints" }], eventGroups: ["Sprints"] };
-    const MILER = { events: [{ event: "Mile", group: "Middle Distance" }], eventGroups: ["Middle Distance"] };
-    const aiCache = new Map();
-
-    // Only the parts of a plan the AI needs (no food lists).
-    const planForAi = (plan) => ({
-      approach: plan.approach,
-      carbsG: plan.carbsG,
-      proteinG: plan.proteinG,
-      entries: plan.entries.map((x) => x.workout
-        ? { time: x.time, title: x.title, workout: true }
-        : { time: x.time, title: x.title, size: x.size, carbsG: x.carbsG, proteinG: x.proteinG }),
-    });
+    // ---- Why this plan ----
+    // Explains the plan for the athlete's own events, then compares it with
+    // other event types doing the same workout at the same body weight.
+    const COMPARE_TYPES = ["sprinter", "distance", "jumper", "thrower"];
 
     // The first recovery meal or snack after the workout.
     const recoveryOf = (plan) => {
       const i = plan.entries.findIndex((x) => x.workout);
-      return plan.entries.slice(i + 1).find((x) => !x.workout);
+      return i < 0 ? null : plan.entries.slice(i + 1).find((x) => !x.workout);
     };
 
-    function aiCoach(profile, w) {
-      const box = el("section", "ai-coach");
-      box.append(el("h3", "", "Why this plan? Ask the AI coach"));
-      box.append(el("div", "sub", "See how a sprinter and a miler should eat differently after this same practice, and which fits you."));
+    function whyThisPlan(profile, w, plan) {
+      const mine = eventTypesOf(profile);
+      const box = el("section", "why-plan");
+      box.append(el("h3", "", "Why this plan works for you"));
 
-      const sprinterPlan = buildPlan({ ...profile, ...SPRINTER }, w);
-      const milerPlan = buildPlan({ ...profile, ...MILER }, w);
-      const compare = el("div", "compare");
-      for (const [name, plan] of [["Sprinter", sprinterPlan], ["Miler", milerPlan]]) {
-        const col = el("div");
-        const rec = recoveryOf(plan);
-        col.append(el("b", "", name), el("small", "", `${plan.carbsG} g carbs · ${plan.proteinG} g protein today`));
-        if (rec) col.append(el("small", "", `After practice: ~${rec.carbsG} g carbs · ${rec.proteinG} g protein`));
-        compare.append(col);
+      // What the athlete's events demand and how the plan fuels them
+      for (const t of mine) {
+        if (mine.length > 1) box.append(el("h4", "", EVENT_TYPES[t].name));
+        box.append(el("p", "", `${EVENT_TYPES[t].demand} ${EVENT_TYPES[t].fuel}`));
       }
-      box.append(compare);
+      if (mine.length > 1) {
+        box.append(el("p", "note", "Because you do events from more than one group, your plan blends their needs."));
+      }
 
-      const result = el("div");
-      const status = el("div", "status");
-      const btn = el("button", "primary", "Explain the difference");
-      btn.type = "button";
-      box.append(btn, status, result);
-
-      const request = {
-        workout: { summary: workoutSummary(w), notes: w.notes },
-        athlete: { events: profile.events.map((e) => e.event), gender: profile.gender, weightKg: profile.weightKg },
-        sprinterPlan: planForAi(sprinterPlan),
-        milerPlan: planForAi(milerPlan),
-      };
-      const cacheKey = JSON.stringify(request);
-
-      const show = (data) => {
-        result.textContent = "";
-        result.append(el("p", "headline", data.headline));
-        result.append(el("h4", "", "Sprinter"), el("p", "", data.sprinter));
-        result.append(el("h4", "", "Miler"), el("p", "", data.miler));
-        result.append(el("h4", "", "Key differences"));
-        const ul = el("ul");
-        data.keyDifferences.forEach((d) => ul.append(el("li", "", d)));
-        result.append(ul);
-        result.append(el("h4", "", "For you"), el("p", "", data.forYou));
-        btn.classList.add("hidden");
-      };
-      if (aiCache.has(cacheKey)) show(aiCache.get(cacheKey));
-
-      btn.addEventListener("click", async () => {
-        if (!AI_ENDPOINT) {
-          status.className = "status error";
-          status.textContent = "The AI coach isn't connected yet.";
-          return;
-        }
-        btn.disabled = true;
-        status.className = "status";
-        status.textContent = "The AI coach is thinking...";
-        try {
-          const res = await fetch(AI_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(request),
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) throw new Error(data.error || "The AI coach is unavailable right now.");
-          aiCache.set(cacheKey, data);
-          status.textContent = "";
-          show(data);
-        } catch (err) {
-          status.className = "status error";
-          status.textContent = err instanceof TypeError ? "Couldn't reach the AI coach. Check your connection." : err.message;
-        } finally {
-          btn.disabled = false;
-        }
+      // Same workout, same body weight, different event
+      const rest = w.type === "rest";
+      box.append(el("h4", "", rest ? "How other events eat on a rest day" : "How other events eat after this same practice"));
+      box.append(el("div", "note", "Same workout and body weight, different event."));
+      const others = COMPARE_TYPES.filter((t) => !mine.includes(t));
+      const rows = [
+        { label: `You (${mine.map((t) => EVENT_TYPES[t].name).join(" + ")})`, plan, you: true },
+        ...others.map((t) => ({
+          label: EVENT_TYPES[t].name,
+          plan: buildPlan({ ...profile, eventGroups: [EVENT_TYPES[t].groups[0]] }, w),
+        })),
+      ];
+      const table = el("table", "compare-table");
+      const head = el("tr");
+      ["Event", "Carbs today", "Protein today", ...(rest ? [] : ["After practice"])].forEach((h) => {
+        const th = el("th", "", h);
+        th.scope = "col";
+        head.append(th);
       });
+      const thead = el("thead");
+      thead.append(head);
+      const tbody = el("tbody");
+      for (const row of rows) {
+        const tr = el("tr", row.you ? "you" : "");
+        const th = el("th", "", row.label);
+        th.scope = "row";
+        tr.append(th, el("td", "", `${row.plan.carbsG} g`), el("td", "", `${row.plan.proteinG} g`));
+        if (!rest) {
+          const rec = recoveryOf(row.plan);
+          tr.append(el("td", "", rec ? `${rec.carbsG} g carbs · ${rec.proteinG} g protein` : "-"));
+        }
+        tbody.append(tr);
+      }
+      table.append(thead, tbody);
+      box.append(table);
+
+      // Why each of the others is different
+      box.append(el("h4", "", "Why they're different"));
+      const ul = el("ul");
+      for (const t of others) {
+        const li = el("li");
+        li.append(el("strong", "", `${EVENT_TYPES[t].plural}: `), `${EVENT_TYPES[t].why}.`);
+        ul.append(li);
+      }
+      box.append(ul);
       return box;
     }
 
@@ -1602,7 +1650,7 @@
       plan.tips.forEach((t) => ul.append(el("li", "", t)));
       tips.append(ul);
       planBox.append(tips);
-      if (w.type !== "rest") planBox.append(aiCoach(profile, w));
+      planBox.append(whyThisPlan(profile, w, plan));
 
       planBox.append(el("div", "disclaimer", "General guidance based on sports nutrition guidelines - not medical advice. Food options are suggestions; pick the one you ate, or choose Other. Talk to a sports dietitian for a personal plan."));
       planBox.classList.remove("hidden");
